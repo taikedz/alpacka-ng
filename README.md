@@ -69,3 +69,9 @@ alpacka:
 Supported package manager engines need to be implemented before they can be used.
 
 Package manager engines should be implemented to this tool's repo ideally, but can also be loaded from `/usr/local/lib/alpacka/engines/*.py` files.
+
+# License
+
+Provided under the terms of the GNU Lesser General Public License v3.0
+
+See [LICENSE.txt](./LICENSE.txt) or [the LGPL online](https://www.gnu.org/licenses/lgpl-3.0.en.html)
