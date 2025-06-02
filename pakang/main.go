@@ -2,6 +2,7 @@ package pakang
 
 import (
     "fmt"
+    "os"
     "strings"
 
     "github.com/taikedz/goargs/goargs"
@@ -24,7 +25,7 @@ func Main(progname string) {
     "[OPTS] {--remove|-r} PACKAGES : remove specified packages",
     "[OPTS] {--upgrade|-g} : upgrade packages on system",
     "[OPTS] {--show|-s} PACKAGE : show information on given package",
-    "[OPTS] {--install-manifest|-M} MANIFEST : install from a manifest file"
+    "[OPTS] {--install-manifest|-M} MANIFEST : install from a manifest file",
     }
     opts_help := []string {
     "-i , -r, -g, and -M, are mutually exclusive - use only one at a time.",
@@ -48,7 +49,7 @@ func Main(progname string) {
     parser.SetShortFlag('u', "update-index")
     yes := parser.Bool("yes", false, "Automatcially accept")
     parser.SetShortFlag('y', "yes")
-    extraflags := parser.Appender("extra", "", "An extra standalone flag, can be specified multiple times; e.g. --extra=Frobulate --extra This=That")
+    extraflags := parser.Appender("extra", "An extra standalone flag, can be specified multiple times; e.g. --extra=Frobulate --extra This=That")
     parser.SetShortFlag('x', "extra")
 
     install := parser.Bool("install", false, "Install the packages")
@@ -62,12 +63,15 @@ func Main(progname string) {
     manifest := parser.String("install-manifest", "", "Install from manifest file")
     parser.SetShortFlag('M', "install-manifest")
 
-    assert_OnlyOneUsed(install, remove, upgrade, manifest, show)
+    has_manif :=  len(*manifest) > 0
+
+    if err := parser.ParseCliArgs(); err != nil {
+        Fail(1, "Invalid args", err)
+    }
+    assert_OnlyOneModeUsed(install, remove, upgrade, show, &has_manif)
     assert_FlagNotUsedWithMode("yes", yes, remove, show)
 
-    parser.ParseCliArgs()
-
-    pman := GetPackageManager(extraflags)
+    pman := GetPackageManager(*extraflags)
 
     if *update {
         pman.Update()
@@ -81,16 +85,16 @@ func Main(progname string) {
         pman.Remove(parser.Args())
     } else if *show {
         var pkg string
-        chopmOne("packages", &pkg)
+        chompOne(&parser, "packages", &pkg)
         pman.Show(pkg)
-    } else if *manifest {
+    } else if len(*manifest) > 0 {
         var manifestfile string
-        chompOne("manifest files", &manifestfile)
+        chompOne(&parser, "manifest files", &manifestfile)
         //installManifest(&pman, manifestfile) // TODO
-    ]
+    }
 }
 
-func chompOne(name string, ref interface{}) {
+func chompOne(parser *goargs.Parser,name string, ref interface{}) {
     remains, err := parser.UnpackArgs(0, ref)
     if err != nil {
         Fail(1, "Internal error", err)
@@ -100,10 +104,10 @@ func chompOne(name string, ref interface{}) {
     }
 }
 
-func assert_OnlyOneUsed(flags ... *bool) {
+func assert_OnlyOneModeUsed(flags ... *bool) {
     found_prior := false
-    for _,flag in range(flags) {
-        if flag {
+    for _,flag := range(flags) {
+        if *flag {
             if found_prior {
                 Fail(1, "Mode set more than once.", nil)
             }
@@ -114,10 +118,10 @@ func assert_OnlyOneUsed(flags ... *bool) {
 
 func assert_FlagNotUsedWithMode(flagname string, flag_set *bool, modes ... *bool) {
     mode_set := false
-    for _,mode range(modes) {
-        mode_set = mode_set || mode
+    for _,mode := range(modes) {
+        mode_set = mode_set || *mode
     }
-    if mode_set && flag_set {
+    if mode_set && *flag_set {
         Fail(1, fmt.Sprintf("%s used with incompatible mode", flagname), nil)
     }
 }
