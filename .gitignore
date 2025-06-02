@@ -1,5 +1,2 @@
-*.pyc
-*.venv
-local_*
-*.local
 *.swp
+bin/
