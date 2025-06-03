@@ -78,9 +78,9 @@ func Main(progname string) {
     }
     
     if *install {
-        pman.Install(yes, parser.Args())
+        pman.Install(*yes, parser.Args())
     } else if *upgrade {
-        pman.Upgrade(yes)
+        pman.Upgrade(*yes)
     } else if *remove {
         pman.Remove(parser.Args())
     } else if *show {
