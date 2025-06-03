@@ -52,6 +52,8 @@ func Main(progname string) {
     extraflags := parser.Appender("extra", "An extra standalone flag, can be specified multiple times; e.g. --extra=Frobulate --extra This=That")
     parser.SetShortFlag('x', "extra")
 
+    // FIXME - these are modes. Instead of a bolean, use a function that sets the mode
+    // and honour the last mode set by the cli args
     install := parser.Bool("install", false, "Install the packages")
     parser.SetShortFlag('i', "install")
     remove := parser.Bool("remove", false, "Remove the packages")

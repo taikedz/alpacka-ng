@@ -6,21 +6,25 @@ Next-gen Alpacka aims to provide similar functionality, along with a requirement
 
 ## Example command line uses
 
-Next Gen Alpacka provides the `paka` command.
+Next Gen Alpacka provides the `paf` command again, reborn...
 
 ```sh
 # Install some packages
-paka -i package1 package2 ...
+paf -i package1 package2 ...
 
 # Do an indices update, before installing
-paka -u -i packages ...
+paf -u -i packages ...
+# also
+paf -ui packages ...
 
 # Do an upgrade, accept changes
-paka -u -g -y
+paf -u -g -y
+# also
+paf -ugy
 
 
 # Install from a packages file
-paka -p packages.yaml
+paf -M packages.yaml
 ```
 
 ## Packages file format
