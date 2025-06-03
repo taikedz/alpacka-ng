@@ -68,7 +68,9 @@ func Main(progname string) {
     } else if len(*manifest) > 0 {
         var manifestfile string
         chompOne(&parser, "manifest files", &manifestfile)
-        //installManifest(&pman, manifestfile) // TODO
+        //installManifest(pman, manifestfile) // TODO
+    } else {
+        pman.Extra(parser.Args())
     }
 }
 
@@ -86,10 +88,15 @@ func parseArgs(progname string) *goargs.Parser {
     "-i , -r, -g, and -M, are mutually exclusive - use only one at a time.",
     "",
     "OPTS:",
-    "{--update-index|-u} : update package index before action",
+    "{--update-index|-u} : update package index before action/search",
     "{--yes|-y} : automatically accept (for -i, -g)",
-    "{--extra|-x} EXTRAFLAGS : extra flag, for custom package manager support. Can be specified multiple times.",
+    "{--extra|-x} EXTRAFLAGS : extra PM flags",
+    "",
+    "-x flags:",
     }
+
+    pman := GetPackageManager(nil)
+    opts_help = append(opts_help, pman.Help()...)
 
     var final_help []string
     for _,hstr := range(modes_help) {
