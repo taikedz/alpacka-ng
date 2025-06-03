@@ -15,13 +15,13 @@ type PackageManager interface {
 }
 
 func GetPackageManager(extra []string) PackageManager {
-    if status, err := RunCmdOut(false, "which", "which"); status < 0 {
+    if status, err := RunCmdOut(false, 0, "which", "which"); status < 0 {
         Fail(1, "Could not run 'which' : %v", err)
     }
 
-    if status, _ := RunCmdOut(false, "which", "apt-get"); status == 0 {
+    if status, _ := RunCmdOut(false, 0, "which", "apt-get"); status == 0 {
         return NewAptPM(nil)
-    } else if status, _ := RunCmdOut(false, "which", "dnf"); status == 0 {
+    } else if status, _ := RunCmdOut(false, 0, "which", "dnf"); status == 0 {
         Fail(11, "Not implemented", nil)
     }
 

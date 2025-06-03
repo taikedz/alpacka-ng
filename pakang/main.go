@@ -18,32 +18,8 @@ func Fail(code int, message string, err error) {
 }
 
 func Main(progname string) {
-    modes_help := []string{
-    "[OPTS] TERMS : search for terms in package descriptions",
-    "actions:",
-    "[OPTS] {--install|-i} PACKAGES : install specified packages",
-    "[OPTS] {--remove|-r} PACKAGES : remove specified packages",
-    "[OPTS] {--upgrade|-g} : upgrade packages on system",
-    "[OPTS] {--show|-s} PACKAGE : show information on given package",
-    "[OPTS] {--install-manifest|-M} MANIFEST : install from a manifest file",
-    }
-    opts_help := []string {
-    "-i , -r, -g, and -M, are mutually exclusive - use only one at a time.",
-    "",
-    "OPTS:",
-    "{--update-index|-u} : update package index before action",
-    "{--yes|-y} : automatically accept (for -i, -g)",
-    "{--extra|-x} EXTRAFLAGS : extra flag, for custom package manager support. Can be specified multiple times.",
-    }
-
-    var final_help []string
-    for _,hstr := range(modes_help) {
-        final_help = append(final_help, fmt.Sprintf("%s %s\n", progname, hstr))
-    }
-    final_help = append(final_help, strings.Join(opts_help, "\n"))
-
-    parser := goargs.NewParser(strings.Join(final_help, "\n"))
-    parser.ParseCliArgs()
+    parser_p := parseArgs(progname)
+    parser := *parser_p
 
     update := parser.Bool("update-index", false, "Update the package index (supported package managers)")
     parser.SetShortFlag('u', "update-index")
@@ -94,6 +70,41 @@ func Main(progname string) {
         chompOne(&parser, "manifest files", &manifestfile)
         //installManifest(&pman, manifestfile) // TODO
     }
+}
+
+func parseArgs(progname string) *goargs.Parser {
+    modes_help := []string{
+    "[OPTS] TERMS : search for terms in package descriptions",
+    "actions:",
+    "[OPTS] {--install|-i} PACKAGES : install specified packages",
+    "[OPTS] {--remove|-r} PACKAGES : remove specified packages",
+    "[OPTS] {--upgrade|-g} : upgrade packages on system",
+    "[OPTS] {--show|-s} PACKAGE : show information on given package",
+    "[OPTS] {--install-manifest|-M} MANIFEST : install from a manifest file",
+    }
+    opts_help := []string {
+    "-i , -r, -g, and -M, are mutually exclusive - use only one at a time.",
+    "",
+    "OPTS:",
+    "{--update-index|-u} : update package index before action",
+    "{--yes|-y} : automatically accept (for -i, -g)",
+    "{--extra|-x} EXTRAFLAGS : extra flag, for custom package manager support. Can be specified multiple times.",
+    }
+
+    var final_help []string
+    for _,hstr := range(modes_help) {
+        final_help = append(final_help, fmt.Sprintf("%s %s\n", progname, hstr))
+    }
+    final_help = append(final_help, strings.Join(opts_help, "\n"))
+
+    parser := goargs.NewParser(strings.Join(final_help, "\n"))
+    if len(os.Args) > 1 {
+        parser.ParseCliArgs()
+    } else {
+        parser.Parse([]string{"-h"})
+    }
+
+    return &parser
 }
 
 func chompOne(parser *goargs.Parser,name string, ref interface{}) {
