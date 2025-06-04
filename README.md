@@ -43,9 +43,16 @@ paf -m -M packages.yaml
 * APT - Debian/Ubuntu family
 * dnf/yum - Fedora/Red Hat family
 * pacman - Arch family
-* apk - Alpine
 * Zypper - OpenSUSE
+* apk - Alpine (note: must be compiled on Alpine to support Alpine ...)
 
+Future intended support:
+
+* chocolatey
+* winget
+* homebrew
+
+Notably, `chocolatey` and `homebrew` should supercede the native package manager : by default these superceders are used, except if `-N` (`native`) is used.
 
 ## Packages file format
 

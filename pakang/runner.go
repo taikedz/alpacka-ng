@@ -39,7 +39,7 @@ func RunCmdOut(dump bool, flags int, tokens ... string) Result {
     var t_cmd string
     var t_args []string
 
-    if flags & NEED_ROOT == NEED_ROOT {
+    if (flags & NEED_ROOT == NEED_ROOT) && !IsRootUser() {
         // Hard-coding use of sudo for now. If we get cleverer in the future,
         //   deal with it starting from here ...
         t_cmd = "sudo"
