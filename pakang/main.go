@@ -4,6 +4,7 @@ import (
     "fmt"
     "os"
     "strings"
+    "slices"
 
     "github.com/taikedz/goargs/goargs"
 )
@@ -17,131 +18,66 @@ func Fail(code int, message string, err error) {
     os.Exit(code)
 }
 
-func Main(progname string) {
-    parser_p := parseArgs(progname)
-    parser := *parser_p
+func Main() {
+    progname := os.Args[0]
+    parser := goargs.NewParser(fmt.Sprintf("%s - Unified package manager command\n\n%s [OPTS] [PACKAGES ...]\n\nOPTS:", progname, progname))
 
-    update := parser.Bool("update-index", false, "Update the package index (supported package managers)")
+    update := parser.Bool("update-index", false, "Update the package index (relevant package managers)")
     parser.SetShortFlag('u', "update-index")
-    yes := parser.Bool("yes", false, "Automatcially accept")
+    yes := parser.Bool("yes", false, "Automatcially accept (install/upgrade)")
     parser.SetShortFlag('y', "yes")
-    extraflags := parser.Appender("extra", "An extra standalone flag, can be specified multiple times; e.g. --extra=Frobulate --extra This=That")
-    parser.SetShortFlag('x', "extra")
 
-    // FIXME - these are modes. Instead of a bolean, use a function that sets the mode
-    // and honour the last mode set by the cli args
-    install := parser.Bool("install", false, "Install the packages")
-    parser.SetShortFlag('i', "install")
-    remove := parser.Bool("remove", false, "Remove the packages")
-    parser.SetShortFlag('r', "remove")
-    upgrade := parser.Bool("upgrade", false, "Upgrade system packages")
-    parser.SetShortFlag('g', "upgrade")
-    show := parser.Bool("show", false, "Show info for package")
-    parser.SetShortFlag('s', "show")
-    manifest := parser.String("install-manifest", "", "Install from manifest file")
-    parser.SetShortFlag('M', "install-manifest")
+    op_modes := map[rune]string{
+        'S': "search",
+        'i': "install",
+        'r': "remove",
+        'g': "upgrade",
+        's': "show",
+        'm': "manifest",
+    }
+    mode := parser.Mode("action", "search", op_modes, "Action")
+    manifestfile := parser.String("manifest", "", "Manifest file path (requires '-m' mode)")
+    parser.SetShortFlag('M', "manifest")
 
-    has_manif :=  len(*manifest) > 0
+    var extraflags *[]string
+    pman := GetPackageManager(nil)
+    pman_help := pman.Help()
+    if len(pman_help) > 0 {
+        extraflags = parser.Appender("extra", "Custom flags for system-specific package manager")
+        parser.SetShortFlag('x', "extra")
+        pman_help = slices.Insert(pman_help, 0, "", "Extra flags (-x|--extra)")
+        parser.SetPostHelptext(strings.Join(pman_help, "\n"))
+    }
+
+    parser.SetHelpOnEmptyArgs(true)
 
     if err := parser.ParseCliArgs(); err != nil {
         Fail(1, "Invalid args", err)
     }
-    assert_OnlyOneModeUsed(install, remove, upgrade, show, &has_manif)
-    assert_FlagNotUsedWithMode("yes", yes, remove, show)
 
-    pman := GetPackageManager(*extraflags)
+    pman = GetPackageManager(*extraflags)
 
     if *update {
         pman.Update()
     }
-    
-    if *install {
+
+    switch *mode {
+    case "install":
         pman.Install(*yes, parser.Args())
-    } else if *upgrade {
-        pman.Upgrade(*yes)
-    } else if *remove {
+    case "remove":
         pman.Remove(parser.Args())
-    } else if *show {
-        var pkg string
-        chompOne(&parser, "packages", &pkg)
-        pman.Show(pkg)
-    } else if len(*manifest) > 0 {
-        var manifestfile string
-        chompOne(&parser, "manifest files", &manifestfile)
-        //installManifest(pman, manifestfile) // TODO
-    } else {
-        pman.Extra(parser.Args())
-    }
-}
-
-func parseArgs(progname string) *goargs.Parser {
-    modes_help := []string{
-    "[OPTS] TERMS : search for terms in package descriptions",
-    "actions:",
-    "[OPTS] {--install|-i} PACKAGES : install specified packages",
-    "[OPTS] {--remove|-r} PACKAGES : remove specified packages",
-    "[OPTS] {--upgrade|-g} : upgrade packages on system",
-    "[OPTS] {--show|-s} PACKAGE : show information on given package",
-    "[OPTS] {--install-manifest|-M} MANIFEST : install from a manifest file",
-    }
-    opts_help := []string {
-    "-i , -r, -g, and -M, are mutually exclusive - use only one at a time.",
-    "",
-    "OPTS:",
-    "{--update-index|-u} : update package index before action/search",
-    "{--yes|-y} : automatically accept (for -i, -g)",
-    "{--extra|-x} EXTRAFLAGS : extra PM flags",
-    "",
-    "-x flags:",
-    }
-
-    pman := GetPackageManager(nil)
-    opts_help = append(opts_help, pman.Help()...)
-
-    var final_help []string
-    for _,hstr := range(modes_help) {
-        final_help = append(final_help, fmt.Sprintf("%s %s\n", progname, hstr))
-    }
-    final_help = append(final_help, strings.Join(opts_help, "\n"))
-
-    parser := goargs.NewParser(strings.Join(final_help, "\n"))
-    if len(os.Args) > 1 {
-        parser.ParseCliArgs()
-    } else {
-        parser.Parse([]string{"-h"})
-    }
-
-    return &parser
-}
-
-func chompOne(parser *goargs.Parser,name string, ref interface{}) {
-    remains, err := parser.UnpackArgs(0, ref)
-    if err != nil {
-        Fail(1, "Internal error", err)
-    }
-    if len(remains) > 0 {
-        Fail(1, fmt.Sprintf("Too many %s specified", name), nil)
-    }
-}
-
-func assert_OnlyOneModeUsed(flags ... *bool) {
-    found_prior := false
-    for _,flag := range(flags) {
-        if *flag {
-            if found_prior {
-                Fail(1, "Mode set more than once.", nil)
-            }
-            found_prior = true
+    case "upgrade":
+        pman.Upgrade(*yes)
+    case "show":
+        for _, pkg := range parser.Args() {
+            pman.Show(pkg)
         }
-    }
-}
-
-func assert_FlagNotUsedWithMode(flagname string, flag_set *bool, modes ... *bool) {
-    mode_set := false
-    for _,mode := range(modes) {
-        mode_set = mode_set || *mode
-    }
-    if mode_set && *flag_set {
-        Fail(1, fmt.Sprintf("%s used with incompatible mode", flagname), nil)
+    case "manifest":
+        if len(*manifestfile) == 0 {
+            Fail(1, "No manifest file specified", nil)
+        }
+        //installManifest(pman, manifestfile) // TODO
+    default:
+        pman.Extra(parser.Args())
     }
 }

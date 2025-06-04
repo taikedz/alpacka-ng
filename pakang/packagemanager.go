@@ -1,11 +1,5 @@
 package pakang
 
-/*
-import (
-    "fmt"
-)
-//*/
-
 type PackageManager interface {
     Update()
     Extra(terms []string)
@@ -20,15 +14,13 @@ type PackageManager interface {
 var found_pm PackageManager = nil
 
 func GetPackageManager(extra []string) PackageManager {
-    if status, err := RunCmdOut(false, 0, "which", "which"); status < 0 {
-        Fail(1, "Could not run 'which' : %v", err)
-    }
+    RunCmdOut(false, 0, "which", "which").OrFail("Could not run 'which'")
 
-    if status, _ := RunCmdOut(false, 0, "which", "apt-get"); status == 0 {
+    if RunCmdOut(false, 0, "which", "apt-get").Ok() {
         return NewAptPM(extra)
-    } else if status, _ := RunCmdOut(false, 0, "which", "dnf"); status == 0 {
+    } else if RunCmdOut(false, 0, "which", "dnf").Ok() {
         return NewDnfPM("dnf", extra)
-    } else if status, _ := RunCmdOut(false, 0, "which", "yum"); status == 0 {
+    } else if RunCmdOut(false, 0, "which", "yum").Ok() {
         return NewDnfPM("yum", extra)
     }
 
