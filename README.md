@@ -48,21 +48,29 @@ Depending on what is found there, certain package groups' definitions are loaded
 
 ```yaml
 alpacka:
-    # Packages needed on specific variants
-    variants:
     # os-release key lookups and comparisons
-    - release: ID_LIKE=debian
+    variants:
+    - release: ID_LIKE=~ubuntu, VERSION_ID>=18.04
       # package group defs to use
-      packages: common, debian
+      groups:
+      - common
+      - debian
+      - newbuntu
 
-    - release: ID_LIKE=fedora, VERSION_ID>=22
-      packages: common, fedora
+    - release: ID_LIKE=~debian
+      groups:
+       - common
+       - debian
 
-    - release: ID_LIKE=fedora, VERSION_ID<22
-      packages: common, fedora
+    - release: ID_LIKE=~fedora
+      groups:
+      - common
+      - fedora
 
     - release: ID_LIKE=arch
-      packages: common, debian
+      groups:
+      - common
+      - debian
 
     # Package groups by name.
     package-groups:
@@ -75,6 +83,9 @@ alpacka:
 
       fedora:
       - httpd
+
+      newbuntu:
+      - pythonispython2
 
 ```
 
