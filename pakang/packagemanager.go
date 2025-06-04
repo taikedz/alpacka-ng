@@ -13,25 +13,29 @@ type PackageManager interface {
 
 var found_pm PackageManager = nil
 
+func checkFor(cmd string) bool {
+    return RunCmdOut( false, 0, "which", cmd).Ok()
+}
+
 func GetPackageManager(extra []string) PackageManager {
     RunCmdOut(false, 0, "which", "which").OrFail("Could not run 'which'")
 
-    if RunCmdOut(false, 0, "which", "apt-get").Ok() {
+    if checkFor("apt-get") {
         return NewAptPM(extra)
 
-    } else if RunCmdOut(false, 0, "which", "dnf").Ok() {
+    } else if checkFor("dnf") {
         return NewDnfPM("dnf", extra)
 
-    } else if RunCmdOut(false, 0, "which", "yum").Ok() {
+    } else if checkFor("yum") {
         return NewDnfPM("yum", extra)
 
-    } else if RunCmdOut(false, 0, "which", "apk").Ok() {
+    } else if checkFor("apk") {
         return NewApkPM(extra)
 
-    } else if RunCmdOut(false, 0, "which", "pacman").Ok() {
+    } else if checkFor("pacman") {
         return NewPacmanPM(extra)
 
-    } else if RunCmdOut(false, 0, "which", "zypper").Ok() {
+    } else if checkFor("zypper") {
         return NewZypperPM(extra)
     }
 
