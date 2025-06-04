@@ -1,12 +1,23 @@
 # Next-gen Alpacka
 
-Original Alpacka project was a wrapper named 'paf' for apt/yum/pacman and other tools to make some lazy command-line operation easier for installation and search, and was written in Bash with Bash Builder.
+[Original Alpacka project](https://gitlab.com/taikedz/alpacka) was a wrapper named 'paf' written in Bash with Bash Builder.
 
-Next-gen Alpacka aims to provide similar functionality, along with a requirements file format to use across package managers.
+This Next-gen Alpacka aims to provide similar functionality, along with a requirements file format to use across package managers. It is re-written in Go for better portability, zero-dependency at runtime, and extensibility.
+
+## Why ?
+
+A few reasons:
+
+1. All package managers have their idiosyncracies even with regard to activities they have in common. Alpacka unifies the workflow.
+2. Some package managers have dissociated commands, or complicated syntax
+  * Alpacka overcomes the former, and provides a uniform syntax to get around the latter.
+3. No package managers allow setting pre-action warnings - this feature helps avoid accidentally butter-fingering an upgrade and downtiming a server.
+4. I'm lazy and don't like retyping a command simply to change one part. Alpacka only runs the last action specified amongst info, install, remove, or system upgrade...
+  * Run `paf -s minetest` to show the package, then use up-arrow and add `-i` to install it (`paf -s minetest -i` , ignores prior `-s` flag)
 
 ## Example command line uses
 
-Next Gen Alpacka provides the `paf` command again, reborn...
+Run the same command on Ubuntu, Fedora, Arch or openSUSE environments:
 
 ```sh
 # Install some packages
@@ -24,12 +35,14 @@ paf -ugy
 
 
 # Install from a packages file
-paf -M packages.yaml
+paf -m -M packages.yaml
 ```
 
 ## Packages file format
 
-We define a format that allows checking the contents of the `/etc/-os-release` file.
+(TBD)
+
+We define a format that allows checking the contents of the `/etc/os-release` file.
 
 Depending on what is found there, certain package groups' definitions are loaded. Variants are declared in-order. The first variant to match is applied.
 
@@ -41,20 +54,15 @@ alpacka:
     - release: ID_LIKE=debian
       # package group defs to use
       packages: common, debian
-      # manager engine to use
-      manager: apt
 
     - release: ID_LIKE=fedora, VERSION_ID>=22
       packages: common, fedora
-      manager: dnf
 
     - release: ID_LIKE=fedora, VERSION_ID<22
       packages: common, fedora
-      manager: yum
 
     - release: ID_LIKE=arch
       packages: common, debian
-      manager: pacman
 
     # Package groups by name.
     package-groups:
@@ -70,11 +78,33 @@ alpacka:
 
 ```
 
-Supported package manager engines need to be implemented before they can be used.
+## Get warnings
 
-Package manager engines should be implemented to this tool's repo ideally, but can also be loaded from `/usr/local/lib/alpacka/engines/*.py` files.
+(TBD)
+
+You can also set a warning for any action. Warnings are messages that are displayed before an action is carried out. If a warning is set, a message is printed and nothing is performed.
+
+To run an action bypassing the warning (execute anyway), use the long bypass option
+
+  paf -g `--live-dangerously`
+
+To set a warning:
+    
+    paf -w upgrade -W "Be careful when upgrading this server - it restarts the core service, which takes a while !"
+
+To unset a warning:
+
+    sudo paf -w upgrade -W .
+
+To simply view an existing warning:
+
+    paf -w upgrade
+
+Warnings can be set for `upgrade` and `remove`
 
 # License
+
+(C) 2005 Tai Kedzierski
 
 Provided under the terms of the GNU Lesser General Public License v3.0
 
