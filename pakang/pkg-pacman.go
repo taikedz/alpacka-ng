@@ -33,28 +33,7 @@ func (self PacmanPM) Extra(terms []string) {
 }
 
 func (self PacmanPM) clean() {
-    println("Cleaning not implemented")
-    // Need to double check what we're trying to do here
-    // Pretty sure this is out of date as a thing
-    // And that dependency on pacman-contrib is suspicious...
-
-    /* Old bash routine:
-    pacman:clean() {
-        local keepstring keepnum
-
-        bincheck:has paccache || {
-            out:warn "You need 'paccache' from 'pacman-contrib' to perform cleans. Installing ..."
-            pacman -S pacman-contrib
-        }
-
-        keepnum="${PAF_flag_clean:2}"
-        if [[ "${keepnum:-}" =~ ^[0-9]+$ ]]; then
-            keepstring="k$keepnum"
-        fi
-
-        paf:sudo paccache $(pacman:assume) -r"${keepstring:-}" # `-rk1` to keep 1 recent level of packages
-    }
-    */
+    RunCmd(NEED_ROOT, "pacman", "-Scc")
 }
 
 func (self PacmanPM) Show(pkg string) {
