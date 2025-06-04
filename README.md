@@ -2,7 +2,7 @@
 
 [Original Alpacka project](https://gitlab.com/taikedz/alpacka) was a wrapper named 'paf' written in Bash with Bash Builder.
 
-This Next-gen Alpacka aims to provide similar functionality, along with a requirements file format to use across package managers. It is re-written in Go for better portability, zero-dependency at runtime, and extensibility.
+This Next-gen Alpacka aims to provide similar functionality, along with a requirements file format to use across package managers. It is re-written in Go for better portability, and zero-dependency at runtime.
 
 ## Why ?
 
