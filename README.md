@@ -38,6 +38,15 @@ paf -ugy
 paf -m -M packages.yaml
 ```
 
+## Package managers supported
+
+* APT - Debian/Ubuntu family
+* dnf/yum - Fedora/Red Hat family
+* pacman - Arch family
+* apk - Alpine
+* Zypper - OpenSUSE
+
+
 ## Packages file format
 
 (TBD)

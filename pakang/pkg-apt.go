@@ -12,6 +12,7 @@ func (self AptPM) Help() []string {
     return []string{
         "clean : Clean the cache",
         "fix : fix broken dependencies",
+        "ppa=$PPA_ID : Add a PPA"
     }
 }
 
@@ -26,6 +27,8 @@ func (self AptPM) Extra(terms []string) {
         self.clean()
     } else if ArrayHas("fix", self.extraflags) {
         self.fixbroken()
+    } else if val, err := ExtractValueOfKey("ppa", self.extraflags); err != nil {
+        self.addPpa(val)
     } else {
         self.Search(terms)
     }
@@ -38,6 +41,11 @@ func (self AptPM) clean() {
 
 func (self AptPM) fixbroken() {
     RunCmd(NEED_ROOT, "apt-get", "-f", "install").OrFail("Install fix failed")
+}
+
+func (self AptPM) addPp(ppa_id string) {
+    RunCmdOut(false, 0, "which", "add-apt-repository").OrFail("'add-apt-repository' command required, but not found on this system.")
+    RunCmd(NEED_ROOT, "add-apt-repository", ppa_id).OrFail("Could not add PPA respoitory")
 }
 
 func (self AptPM) Show(pkg string) {

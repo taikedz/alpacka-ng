@@ -18,10 +18,21 @@ func GetPackageManager(extra []string) PackageManager {
 
     if RunCmdOut(false, 0, "which", "apt-get").Ok() {
         return NewAptPM(extra)
+
     } else if RunCmdOut(false, 0, "which", "dnf").Ok() {
         return NewDnfPM("dnf", extra)
+
     } else if RunCmdOut(false, 0, "which", "yum").Ok() {
         return NewDnfPM("yum", extra)
+
+    } else if RunCmdOut(false, 0, "which", "apk").Ok() {
+        return NewApkPM(extra)
+
+    } else if RunCmdOut(false, 0, "which", "pacman").Ok() {
+        return NewPacmanPM(extra)
+
+    } else if RunCmdOut(false, 0, "which", "zypper").Ok() {
+        return NewZypperPM(extra)
     }
 
     Fail(10, "No package manager found.", nil)
