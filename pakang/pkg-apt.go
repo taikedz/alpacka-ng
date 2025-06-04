@@ -18,7 +18,7 @@ func (self AptPM) Help() []string {
 func (self AptPM) Search(terms []string) {
     cmd := []string{"apt-cache", "search"}
     cmd = append(cmd, terms...)
-    RunCmd(0, cmd...)
+    RunCmd(0, cmd...).OrFail("Search failed")
 }
 
 func (self AptPM) Extra(terms []string) {
@@ -32,20 +32,20 @@ func (self AptPM) Extra(terms []string) {
 }
 
 func (self AptPM) clean() {
-    RunCmd(NEED_ROOT, "apt-get", "autoclean")
-    RunCmd(NEED_ROOT, "apt-get", "autoremove")
+    RunCmd(NEED_ROOT, "apt-get", "autoclean").OrFail("Auto clean failed")
+    RunCmd(NEED_ROOT, "apt-get", "autoremove").OrFail("Atu remove failed")
 }
 
 func (self AptPM) fixbroken() {
-    RunCmd(NEED_ROOT, "apt-get", "-f", "install")
+    RunCmd(NEED_ROOT, "apt-get", "-f", "install").OrFail("Install fix failed")
 }
 
 func (self AptPM) Show(pkg string) {
-    RunCmd(0, "apt-cache", "show", pkg)
+    RunCmd(0, "apt-cache", "show", pkg).OrFail("Error")
 }
 
 func (self AptPM) Update() {
-    RunCmd(NEED_ROOT, "apt-get", "update")
+    RunCmd(NEED_ROOT, "apt-get", "update").OrFail("Could not update package index")
 }
 
 func (self AptPM) Install(yes bool, packages []string) {
@@ -54,13 +54,13 @@ func (self AptPM) Install(yes bool, packages []string) {
         cmd = append(cmd, "-y")
     }
     cmd = append(cmd, packages...)
-    RunCmd(NEED_ROOT, cmd...)
+    RunCmd(NEED_ROOT, cmd...).OrFail("Install operation failed")
 }
 
 func (self AptPM) Remove(packages []string) {
     cmd := []string{"apt-get", "remove"}
     cmd = append(cmd, packages...)
-    RunCmd(NEED_ROOT, cmd...)
+    RunCmd(NEED_ROOT, cmd...).OrFail("Package removal failed")
 }
 
 func (self AptPM) Upgrade(yes bool) {
@@ -68,5 +68,5 @@ func (self AptPM) Upgrade(yes bool) {
     if yes {
         cmd = append(cmd, "-y")
     }
-    RunCmd(NEED_ROOT, cmd...)
+    RunCmd(NEED_ROOT, cmd...).OrFail("Upgarde failed")
 }

@@ -21,7 +21,7 @@ func (self PacmanPM) Help() []string {
 func (self PacmanPM) Search(terms []string) {
     cmd := []string{"pacman", "-Ss"}
     cmd = append(cmd, terms...)
-    RunCmd(0, cmd...)
+    RunCmd(0, cmd...).OrFail("Search failed")
 }
 
 func (self PacmanPM) Extra(terms []string) {
@@ -33,15 +33,15 @@ func (self PacmanPM) Extra(terms []string) {
 }
 
 func (self PacmanPM) clean() {
-    RunCmd(NEED_ROOT, "pacman", "-Scc")
+    RunCmd(NEED_ROOT, "pacman", "-Scc").OrFail("Clean failed")
 }
 
 func (self PacmanPM) Show(pkg string) {
-    RunCmd(0, "pacman", "-Si", pkg)
+    RunCmd(0, "pacman", "-Si", pkg).OrFail("Show failed")
 }
 
 func (self PacmanPM) Update() {
-    RunCmd(NEED_ROOT, "pacman", "-Syy")
+    RunCmd(NEED_ROOT, "pacman", "-Syy").OrFail("PIndex update failed")
     *self.updated = true
 }
 
@@ -51,13 +51,13 @@ func (self PacmanPM) Install(yes bool, packages []string) {
         cmd = append(cmd, "-y")
     }
     cmd = append(cmd, packages...)
-    RunCmd(NEED_ROOT, cmd...)
+    RunCmd(NEED_ROOT, cmd...).OrFail("Install failed")
 }
 
 func (self PacmanPM) Remove(packages []string) {
     cmd := []string{"pacman", "-Rs"}
     cmd = append(cmd, packages...)
-    RunCmd(NEED_ROOT, cmd...)
+    RunCmd(NEED_ROOT, cmd...).OrFail("Remove failed")
 }
 
 func (self PacmanPM) Upgrade(yes bool) {
@@ -70,5 +70,5 @@ func (self PacmanPM) Upgrade(yes bool) {
     } else {
         cmd = append(cmd, "-Syu")
     }
-    RunCmd(NEED_ROOT, cmd...)
+    RunCmd(NEED_ROOT, cmd...).OrFail("Upgrade failed")
 }

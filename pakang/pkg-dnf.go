@@ -25,8 +25,8 @@ func (self DnfPM) Extra(terms []string) {
 }
 
 func (self DnfPM) clean() {
-    RunCmd(NEED_ROOT, self.pm_cmd, "clean")
-    RunCmd(NEED_ROOT, self.pm_cmd, "autoremove")
+    RunCmd(NEED_ROOT, self.pm_cmd, "clean").OrFail("Clean failed")
+    RunCmd(NEED_ROOT, self.pm_cmd, "autoremove").OrFail("Auto remove failed")
 }
 
 func (self DnfPM) Search(terms []string) {
@@ -49,13 +49,13 @@ func (self DnfPM) Install(yes bool, packages []string) {
         cmd = append(cmd, "-y")
     }
     cmd = append(cmd, packages...)
-    RunCmd(NEED_ROOT, cmd...)
+    RunCmd(NEED_ROOT, cmd...).OrFail("Install failed")
 }
 
 func (self DnfPM) Remove(packages []string) {
     cmd := []string{self.pm_cmd, "remove"}
     cmd = append(cmd, packages...)
-    RunCmd(NEED_ROOT, cmd...)
+    RunCmd(NEED_ROOT, cmd...).OrFail("Remove failed")
 }
 
 func (self DnfPM) Upgrade(yes bool) {
@@ -63,5 +63,5 @@ func (self DnfPM) Upgrade(yes bool) {
     if yes {
         cmd = append(cmd, "-y")
     }
-    RunCmd(NEED_ROOT, cmd...)
+    RunCmd(NEED_ROOT, cmd...).OrFail("Upgrade failed")
 }
