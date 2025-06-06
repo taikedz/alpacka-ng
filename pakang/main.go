@@ -27,6 +27,12 @@ func Main() {
     yes := parser.Bool("yes", false, "Automatcially accept (install/upgrade)")
     parser.SetShortFlag('y', "yes")
 
+    warning_message := parser.String("warning-message", "", "A warning message")
+    parser.SetShortFlag('W', "warning-message")
+    warning_action := parser.Choices("warning-action", []string{"", "install", "upgrade", "remove", "manifest"}, "Action for the warning message")
+    parser.SetShortFlag('A', "warning-action")
+    override_warning := parser.Bool("ignore-warnings", false, "Use this flag to ignore the warning.")
+
     op_modes := map[rune]string{
         'S': "search",
         'i': "install",
@@ -34,6 +40,7 @@ func Main() {
         'g': "upgrade",
         's': "show",
         'm': "manifest",
+        'w': "warn",
     }
     mode := parser.Mode("action", "search", op_modes, "Action")
     manifestfile := parser.String("manifest", "", "Manifest file path (requires '-m' mode)")
@@ -57,27 +64,77 @@ func Main() {
 
     pman = GetPackageManager(*extraflags)
 
-    if *update {
-        pman.Update()
-    }
-
     switch *mode {
     case "install":
+        WarningCheck(*mode, *override_warning)
+        if *update { pman.Update() }
         pman.Install(*yes, parser.Args())
     case "remove":
+        WarningCheck(*mode, *override_warning)
+        if *update { pman.Update() }
         pman.Remove(parser.Args())
     case "upgrade":
+        WarningCheck(*mode, *override_warning)
+        if *update { pman.Update() }
         pman.Upgrade(*yes)
     case "show":
         for _, pkg := range parser.Args() {
             pman.Show(pkg)
         }
     case "manifest":
+        WarningCheck(*mode, *override_warning)
+        if *update { pman.Update() }
         if len(*manifestfile) == 0 {
             Fail(1, "No manifest file specified", nil)
         }
         //installManifest(pman, manifestfile) // TODO
+    case "warn":
+        doWarningAction(*warning_message, *warning_action)
     default:
         pman.Extra(parser.Args())
+    }
+}
+
+func doWarningAction(message, action string) {
+    if action != "" {
+        if message == "" {
+            text, err := GetWarning(action)
+            if err != nil {
+                Fail(1, "Could not read warning file", err)
+            }
+            if text != "" {
+                fmt.Printf("Warning for %s:\n%s\n", action, text)
+            }
+            os.Exit(0)
+        }
+        
+        if message == "." {
+            message = ""
+        }
+
+        err := SetWarning(action, message)
+        if err != nil {
+            Fail(1, "Could not set warning", err)
+        }
+    } else if message != "" {
+        Fail(1, "Action -A must be specified to set a warning with -W", nil)
+    } else {
+        Fail(1, "-w mode specified without -A action or -W message", nil)
+    }
+}
+
+func WarningCheck(name string, override_warning bool) {
+    warntext, err := GetWarning(name)
+    if err != nil {
+        Fail(1, "Failed to read warning file", err)
+    }
+    if warntext == "" {
+        // No warning
+        return
+    }
+    // A warning was found - print it, and abort.
+    fmt.Printf("!!! WARNING: %s\n\n", warntext)
+    if !override_warning {
+        Fail(10, "Abort", nil)
     }
 }

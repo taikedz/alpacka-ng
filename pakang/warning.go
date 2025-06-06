@@ -12,6 +12,12 @@ func SetWarning(name string, message string) error {
 	if ! IsRootUser() {
 		return fmt.Errorf("Root user is required to set warnings.")
 	}
+	if ! fileExists(warning_path) {
+		// https://gosamples.dev/create-directory/
+		if err := os.MkdirAll(warning_path, 0755); err != nil {
+			Fail(1, "Could not create global warnings dir", err)
+		}
+	}
 	return writeWarningFile(fileForWarning(name), message)
 }
 
@@ -25,7 +31,7 @@ func GetWarning(name string) (string, error) {
 }
 
 func fileForWarning(name string) string {
-	warnfile := fmt.Sprintf("%s/%s", warning_path, name)
+	return fmt.Sprintf("%s/%s", warning_path, name)
 }
  
 func readWarningFile(filepath string) (string, error) {

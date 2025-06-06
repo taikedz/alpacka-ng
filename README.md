@@ -107,25 +107,23 @@ alpacka:
 
 ## Get warnings
 
-(TBD)
+You can also set a warning for any action. Warnings are messages that are displayed before an action is carried out. If a warning is set, a message is printed and `paf` exits without carrying out the activity.
 
-You can also set a warning for any action. Warnings are messages that are displayed before an action is carried out. If a warning is set, a message is printed and nothing is performed.
+To run an action bypassing the warning (execute anyway), use the long bypass option:
 
-To run an action bypassing the warning (execute anyway), use the long bypass option
-
-  paf -g `--live-dangerously`
+  paf -g --ignore-warnings
 
 To set a warning:
     
-    paf -w upgrade -W "Be careful when upgrading this server - it restarts the core service, which takes a while !"
+    paf -w -A upgrade -W "Be careful when upgrading this server - it restarts the core service, which takes a while !"
 
 To unset a warning:
 
-    sudo paf -w upgrade -W .
+    sudo paf -w -A upgrade -W .
 
 To simply view an existing warning:
 
-    paf -w upgrade
+    paf -w -A upgrade
 
 Warnings can be set for `upgrade` and `remove`
 
