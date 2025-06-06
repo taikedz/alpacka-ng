@@ -26,6 +26,8 @@ func Main() {
     parser.SetShortFlag('u', "update-index")
     yes := parser.Bool("yes", false, "Automatcially accept (install/upgrade)")
     parser.SetShortFlag('y', "yes")
+    print_version := parser.Bool("version", false, "Show version and exit")
+    parser.SetShortFlag('V', "version")
 
     warning_message := parser.String("warning-message", "", "A warning message")
     parser.SetShortFlag('W', "warning-message")
@@ -60,6 +62,11 @@ func Main() {
 
     if err := parser.ParseCliArgs(); err != nil {
         Fail(1, "Invalid args", err)
+    }
+
+    if *print_version {
+        fmt.Printf("%s %s\n", progname, VERSION)
+        return
     }
 
     pman = GetPackageManager(*extraflags)
