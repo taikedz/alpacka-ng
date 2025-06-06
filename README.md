@@ -4,6 +4,22 @@
 
 This Next-gen Alpacka aims to provide similar functionality, along with a requirements file format to use across package managers. It is re-written in Go for better portability, and zero-dependency at runtime.
 
+## Install
+
+Install to a location in root's `PATH` list - for example `/usr/local/bin`
+
+On Ubuntu/Fedora/etc ... GNU/Linux:
+
+```sh
+sudo bash -c "curl https://github.com/taikedz/alpacka-ng/releases/download/v0.0.1/paf > /usr/local/bin/paf"
+```
+
+On Alpine Linux:
+
+```sh
+sudo bash -c "curl https://github.com/taikedz/alpacka-ng/releases/download/v0.0.1/paf-alpine > /usr/local/bin/paf"
+```
+
 ## Why ?
 
 A few reasons:
