@@ -1,4 +1,14 @@
+#!/usr/bin/env bash
+
+if [[ "$IGNORE_PRECOMMIT_HOOK" = true ]]; then
+    exit 0
+fi
+
 if ! bash ci/version-is-bumped.sh; then
     echo "Bump the version string to newer than the last tagged version!"
     exit 1
 fi
+
+#if ! ./build.sh; then
+#    exit 1
+#fi
