@@ -9,15 +9,6 @@ import (
     "github.com/taikedz/goargs/goargs"
 )
 
-func Fail(code int, message string, err error) {
-    if err == nil {
-        fmt.Println(message)
-    } else {
-        fmt.Printf("%s : %v\n", message, err)
-    }
-    os.Exit(code)
-}
-
 func Main() {
     progname := os.Args[0]
     parser := goargs.NewParser(fmt.Sprintf("%s - Unified package manager command\n\n%s [OPTS] [PACKAGES ...]\n\nOPTS:", progname, progname))
