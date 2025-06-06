@@ -3,6 +3,7 @@ package pakang
 import (
 	"fmt"
 	"strings"
+	"runtime"
 	"os/user"
 	"os"
 )
