@@ -1,3 +1,3 @@
 package pakang
 
-const VERSION string = "v0.0.1"
+const VERSION string = "v0.0.2"

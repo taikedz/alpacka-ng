@@ -9,8 +9,7 @@ import (
     "github.com/taikedz/goargs/goargs"
 )
 
-func Main() {
-    progname := os.Args[0]
+func Main(progname string) {
     parser := goargs.NewParser(fmt.Sprintf("%s - Unified package manager command\n\n%s [OPTS] [PACKAGES ...]\n\nOPTS:", progname, progname))
 
     update := parser.Bool("update-index", false, "Update the package index (relevant package managers)")
