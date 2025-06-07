@@ -4,21 +4,40 @@
 
 This Next-gen Alpacka aims to provide similar functionality, along with a requirements file format to use across package managers. It is re-written in Go for better portability, and zero-dependency at runtime.
 
-## Install
+## Download + Install
+
+Download the appropriate binary:
+
+```sh
+# Use the version for you
+version=0.0.1
+
+# On Ubuntu/Fedora/etc ... various GNU/Linux:
+curl -L https://github.com/taikedz/alpacka-ng/releases/download/v${version}/paf > /tmp/paf-dl
+
+# On alpine:
+curl -L https://github.com/taikedz/alpacka-ng/releases/download/v${version}/paf-alpine > /tmp/paf-dl
+```
 
 Install to a location in root's `PATH` list - for example `/usr/local/bin`
 
-On Ubuntu/Fedora/etc ... GNU/Linux:
 
 ```sh
-sudo bash -c "curl https://github.com/taikedz/alpacka-ng/releases/download/v0.0.1/paf > /usr/local/bin/paf"
+chmod 755 /tmp/paf-dl
+sudo mv -i /tmp/paf-dl /usr/local/bin/paf
 ```
 
-On Alpine Linux:
+## Build
+
+You need the go build tools on your system. Please see <https://go.dev/doc/install>
+
+Then run
 
 ```sh
-sudo bash -c "curl https://github.com/taikedz/alpacka-ng/releases/download/v0.0.1/paf-alpine > /usr/local/bin/paf"
+./build.sh
 ```
+
+A new build will be produced in the `./bin/` output directory.
 
 ## Why ?
 
