@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// Always
 func Fail(code int, message string, err error) {
     if err == nil {
         fmt.Println(message)
@@ -12,4 +13,11 @@ func Fail(code int, message string, err error) {
         fmt.Printf("%s : %v\n", message, err)
     }
     os.Exit(code)
+}
+
+// Conditionally
+func FailIf(err error, code int, message string, items ...any) {
+    if err != nil {
+        Fail(code, fmt.Sprintf(message, items...), err)
+    }
 }

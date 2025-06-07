@@ -1,0 +1,2 @@
+release: version_id<=22, id=~ubuntu
+groups: common, debian
