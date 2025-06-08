@@ -3,6 +3,7 @@ package pakang
 import (
 	"fmt"
 	"strings"
+	"strconv"
 	"runtime"
 	"os/user"
 	"os"
@@ -54,4 +55,74 @@ func IsWinAdmin() (bool, error) {
         return false, nil
     }
     return true, nil
+}
+
+func SplitStringMultichar(data string, chars string) []string {
+	tokens := []string{data}
+
+	for _,c := range chars {
+		tokens = SplitStringsChar(tokens, string(c))
+	}
+	return tokens
+}
+
+func SplitStringsChar(data []string, char string) []string {
+	var tokens []string
+	for _, piece := range data {
+		tokens = append(tokens, strings.Split(piece, string(char))...)
+	}
+	return tokens
+}
+
+// Check that held_data >= reference
+func ArrIntsGte(reference, held_data []int) bool {
+
+	z := max(len(reference), len(held_data))
+	for i:=0 ; i<z ; i++ {
+		held_data_v := 0
+		if i < len(held_data) {
+			held_data_v = held_data[i]
+		}
+		reference_v := 0
+		if i < len(reference) {
+			reference_v = reference[i]
+		}
+		if held_data_v > reference_v { return true }
+		if held_data_v < reference_v { return false }
+	}
+	return true // they are equal by now
+}
+
+// Check that held_data <= reference
+func ArrIntsLte(reference, held_data []int) bool {
+
+	z := max(len(reference), len(held_data))
+	for i:=0 ; i<z ; i++ {
+		held_data_v := 0
+		if i < len(held_data) {
+			held_data_v = held_data[i]
+		}
+		reference_v := 0
+		if i < len(reference) {
+			reference_v = reference[i]
+		}
+		if held_data_v < reference_v { return true }
+		if held_data_v > reference_v { return false }
+	}
+	return true // they are equal by now
+}
+
+
+func ExtractInts(data string) ([]int, error) {
+	tokens := SplitStringMultichar(data, ".,: ")
+	var nums []int
+	for _,t := range tokens {
+		n, e := strconv.Atoi(strings.Trim(t, " "))
+		if e != nil {
+			return nil, e
+		}
+		nums = append(nums, n)
+	}
+
+	return nums, nil
 }
