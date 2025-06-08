@@ -2,7 +2,6 @@ package pakang
 
 import (
 	"os"
-	"fmt"
 	"gopkg.in/yaml.v3"
 )
 
@@ -38,16 +37,25 @@ What a palava trying to establish chain of trust... Lazy-me will just accept `go
 but it still grates me...
 */
 
-type ReleaseSpec struct {
+type Manifest struct {
+	Alpacka Sections
+}
+
+type Sections struct {
+	Variants []Variant
+	PackageGroups map[string][]string `yaml:"package-groups"`
+}
+
+type Variant struct {
 	Release string // to allow shorthands, we treat this as a plain string
 	Groups string
 }
 
-func LoadManifest(mfest_path string) {
+func LoadManifest(mfest_path string) Manifest {
 	data, err := os.ReadFile(mfest_path)
 	FailIf(err, 1, "Could not read manifest %s", mfest_path)
 
-	release := ReleaseSpec{}
-	yaml.Unmarshal(data, &release)
-	fmt.Printf("%#v\n", release)
+	manifest := Manifest{}
+	yaml.Unmarshal(data, &manifest)
+	return manifest
 }

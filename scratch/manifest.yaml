@@ -1,2 +1,14 @@
-release: version_id<=22, id=~ubuntu
-groups: common, debian
+alpacka:
+  variants:
+  - release: version_id<=22, id=~fedora
+    groups: common, fedora
+  - release: id=~ubuntu
+    groups: common, debian
+
+  package-groups:
+    common:
+    - mariadb
+    debian:
+    - apache2
+    fedora:
+    - httpd

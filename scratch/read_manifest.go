@@ -2,9 +2,11 @@ package main
 
 import (
     "os"
+    "fmt"
     "github.com/taikedz/alpacka-ng/pakang"
 )
 
 func main() {
-    pakang.LoadManifest(os.Args[1])
+    manifest := pakang.LoadManifest(os.Args[1])
+    fmt.Printf("%#v\n", manifest)
 }
