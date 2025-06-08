@@ -59,3 +59,23 @@ func LoadManifest(mfest_path string) Manifest {
 	yaml.Unmarshal(data, &manifest)
 	return manifest
 }
+
+func (self Manifest) GetPackageGroups() []string {
+	for _, variant := range self.Alpacka.Variants {
+		comp_strs := SplitStringMultichar(variant.Release, ", ")
+		comp_strs = ExcludeStr(comp_strs, []string{""})
+
+		// iterate comp_strs - apply all comparisons, if all return true
+		//  then return groups from this variant
+	}
+}
+
+func (self manifest) GetPackages() []string, error {
+	pgroups := self.GetPackageGroups()
+
+	// iterate groups
+	// load all grroup contents
+	// remove duplicate entries
+
+	return pgroups, nil
+}

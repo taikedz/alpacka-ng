@@ -79,12 +79,12 @@ func Main(progname string) {
             pman.Show(pkg)
         }
     case "manifest":
-        WarningCheck(*mode, *override_warning)
-        if *update { pman.Update() }
+        WarningCheck("install", *override_warning)
         if len(*manifestfile) == 0 {
             Fail(1, "No manifest file specified", nil)
         }
-        //installManifest(pman, manifestfile) // TODO
+        if *update { pman.Update() }
+        installManifest(pman, manifestfile)
     case "warn":
         doWarningAction(*warning_message, *warning_action)
     default:
@@ -118,6 +118,12 @@ func doWarningAction(message, action string) {
     } else {
         Fail(1, "-w mode specified without -A action or -W message", nil)
     }
+}
+
+func installManifest(pman PackageManager, manifest_path string) {
+    manifest := LoadManifest(manifest_path)
+    packs := manifest.GetPackages()
+    pman.Install(true, packs)
 }
 
 func WarningCheck(name string, override_warning bool) {

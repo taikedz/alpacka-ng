@@ -18,6 +18,16 @@ func ArrayHas(term string, stuff []string) bool {
 	return false
 }
 
+func ExcludeStr(input []string, exclude []string) []string {
+	var retained []string
+
+	for _,s := range input {
+		if ! ArrayHas(s, exclude) {
+			retained = append(retained, s)
+		}
+	}
+}
+
 func ExtractValueOfKey(key string, items []string) (string, error) {
 	// assume an array of "key=value" strings
 	// locate key , split on '=', return the value
