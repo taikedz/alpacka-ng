@@ -42,9 +42,7 @@ func ExtractValueOfKey(key string, items []string) (string, error) {
 
 func IsRootUser() bool {
     u, e := user.Current()
-    if e != nil {
-        Fail(98, "Fatal - Could not get current user!", e)
-    }
+	FailIf(e, 98, "Fatal - Could not get current user!", e)
     return u.Uid == "0" // posix only!
 }
 

@@ -14,9 +14,8 @@ func SetWarning(name string, message string) error {
 	}
 	if ! fileExists(warning_path) {
 		// https://gosamples.dev/create-directory/
-		if err := os.MkdirAll(warning_path, 0755); err != nil {
-			Fail(1, "Could not create global warnings dir", err)
-		}
+		err := os.MkdirAll(warning_path, 0755)
+		FailIf(err, 1, "Could not create global warnings dir")
 	}
 	return writeWarningFile(fileForWarning(name), message)
 }

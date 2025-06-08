@@ -50,9 +50,8 @@ func Main(progname string) {
 
     parser.SetHelpOnEmptyArgs(true)
 
-    if err := parser.ParseCliArgs(); err != nil {
-        Fail(1, "Invalid args", err)
-    }
+    err := parser.ParseCliArgs()
+    FailIf(err, 1, "Invalid args")
 
     if *print_version {
         fmt.Printf("%s %s\n", progname, VERSION)
@@ -96,9 +95,7 @@ func doWarningAction(message, action string) {
     if action != "" {
         if message == "" {
             text, err := GetWarning(action)
-            if err != nil {
-                Fail(1, "Could not read warning file", err)
-            }
+            FailIf(err, 1, "Could not read warning file")
             if text != "" {
                 fmt.Printf("Warning for %s:\n%s\n", action, text)
             }
@@ -110,9 +107,7 @@ func doWarningAction(message, action string) {
         }
 
         err := SetWarning(action, message)
-        if err != nil {
-            Fail(1, "Could not set warning", err)
-        }
+        FailIf(err, 1, "Could not set warning")
     } else if message != "" {
         Fail(1, "Action -A must be specified to set a warning with -W", nil)
     } else {
@@ -123,14 +118,16 @@ func doWarningAction(message, action string) {
 func installManifest(pman PackageManager, manifest_path string) {
     manifest := LoadManifest(manifest_path)
     packs := manifest.GetPackages()
+    if packs == nil {
+        Fail(1, "No package groups apply to this system.", nil)
+    }
     pman.Install(true, packs)
 }
 
 func WarningCheck(name string, override_warning bool) {
     warntext, err := GetWarning(name)
-    if err != nil {
-        Fail(1, "Failed to read warning file", err)
-    }
+    FailIf(err, 1, "Failed to read warning file")
+
     if warntext == "" {
         // No warning
         return

@@ -68,10 +68,13 @@ func (self Manifest) GetPackageGroups() []string {
 		// iterate comp_strs - apply all comparisons, if all return true
 		//  then return groups from this variant
 	}
+
+	return nil
 }
 
 func (self manifest) GetPackages() []string, error {
 	pgroups := self.GetPackageGroups()
+	if pgroups == nil { return nil }
 
 	// iterate groups
 	// load all grroup contents
