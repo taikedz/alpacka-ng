@@ -1,8 +1,21 @@
 # Next-gen Alpacka
 
-[Original Alpacka project](https://gitlab.com/taikedz/alpacka) was a wrapper named 'paf' written in Bash with Bash Builder.
+Alpacka/NG is a re-write of my original [Alpacka][alpacka] bash script. It is a single-file deployable written in Go aimed at helping with distro-hopping and unifying package specs where package names differ between distros (looking at you Apache on Debian/Fedora!)
 
-This Next-gen Alpacka aims to provide similar functionality, along with a requirements file format to use across package managers. It is re-written in Go for better portability, and zero-dependency at runtime.
+Alpacka provides:
+
+* a single command that works across major distros and derivatives (Debian+, Fedora+, SuSE+, Arch+)
+  * distro hoppers' boon!
+* a single command for all common operations (no `apt-cache`/`apt-get` differentiation)
+* intuitive flags and corresponding short-flags (looking at you `pacman`) for common operations
+* no runtime dependencies (limitation of original alpacka)
+* manifest spec to help achieve same install when same packages differ in names across distros
+  * e.g. python=python2 on old ubuntu and python=python3 on new ubuntu
+  * e.g. Apache web server is `apache2` on Debian derivatives and `httpd` on Fedora/Red Hat derivatives
+* simple warning system - block actions by setting a warning, bypass the warning with `--ignore-warnings`
+  * prevent butter-fingers from operating on shared systems, allow automation to proceed
+
+[alpacka]: https://gitlab.com/taikedz/alpacka
 
 ## Download + Install
 
@@ -10,19 +23,16 @@ Download the appropriate binary:
 
 ```sh
 # Use the version for you
-version=0.0.1
+version=0.0.2
+
+# set to "paf-alpine" for alpine deployments
+variant=paf
 
 # On Ubuntu/Fedora/etc ... various GNU/Linux:
-curl -L https://github.com/taikedz/alpacka-ng/releases/download/v${version}/paf > /tmp/paf-dl
+wget https://github.com/taikedz/alpacka-ng/releases/download/v${version}/${variant} -O /tmp/paf-dl
 
-# On alpine:
-curl -L https://github.com/taikedz/alpacka-ng/releases/download/v${version}/paf-alpine > /tmp/paf-dl
-```
+# Install to a location in root's `PATH` list - for example `/usr/local/bin`
 
-Install to a location in root's `PATH` list - for example `/usr/local/bin`
-
-
-```sh
 chmod 755 /tmp/paf-dl
 sudo mv -i /tmp/paf-dl /usr/local/bin/paf
 ```
@@ -38,17 +48,6 @@ Then run
 ```
 
 A new build will be produced in the `./bin/` output directory.
-
-## Why ?
-
-A few reasons:
-
-1. All package managers have their idiosyncracies even with regard to activities they have in common. Alpacka unifies the workflow.
-2. Some package managers have dissociated commands, or complicated syntax
-  * Alpacka overcomes the former, and provides a uniform syntax to get around the latter.
-3. No package managers allow setting pre-action warnings - this feature helps avoid accidentally butter-fingering an upgrade and downtiming a server.
-4. I'm lazy and don't like retyping a command simply to change one part. Alpacka only runs the last action specified amongst info, install, remove, or system upgrade...
-  * Run `paf -s minetest` to show the package, then use up-arrow and add `-i` to install it (`paf -s minetest -i` , ignores prior `-s` flag)
 
 ## Example command line uses
 
@@ -79,9 +78,9 @@ paf -m -M packages.yaml
 * dnf/yum - Fedora/Red Hat family
 * pacman - Arch family
 * Zypper - OpenSUSE
-* apk - Alpine (note: must be compiled on Alpine to support Alpine ...)
+* apk - Alpine (note: must be compiled in an Alpine environment to actually support Alpine ...)
 
-Future intended support:
+May support in future:
 
 * chocolatey
 * winget
@@ -91,9 +90,7 @@ Notably, `chocolatey` and `homebrew` should supercede the native package manager
 
 ## Packages file format
 
-(TBD)
-
-We define a format that allows checking the contents of the `/etc/os-release` file.
+Alpacka defines a YAML file format that allows checking the contents of the `/etc/os-release` file.
 
 Depending on what is found there, certain package groups' definitions are loaded. Variants are declared in-order. The first variant to match is applied.
 
@@ -137,12 +134,18 @@ alpacka:
 
       newbuntu:
       - pythonispython2
-
 ```
+
+Comparisons supported:
+
+* `>=` - greater than or equal to specified value
+* `<=` - less than or equal to specified value
+* `==` - exactly equal to specified value
+* `=~` - release file contains specified value
 
 ## Get warnings
 
-You can also set a warning for any action. Warnings are messages that are displayed before an action is carried out. If a warning is set, a message is printed and `paf` exits without carrying out the activity.
+You can set a warning for any action. Warnings are messages that are displayed instead of carrying out an option. If a warning is set, a message is printed and `paf` exits without carrying out the activity. If no warning is set, or if prior warning was unset, action proceeds as normal.
 
 To run an action bypassing the warning (execute anyway), use the long bypass option:
 
