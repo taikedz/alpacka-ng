@@ -45,7 +45,7 @@ func Main(progname string) {
     if len(pman_help) > 0 {
         extraflags = parser.Appender("extra", "Custom flags for system-specific package manager")
         parser.SetShortFlag('x', "extra")
-        pman_help = slices.Insert(pman_help, 0, "", "Extra flags (-x|--extra)")
+        pman_help = slices.Insert(pman_help, 0, "", pman.Name(), "  Extra flags (-x|--extra)")
         parser.SetPostHelptext(strings.Join(pman_help, "\n"))
     }
 

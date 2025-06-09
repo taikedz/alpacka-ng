@@ -9,6 +9,7 @@ type PackageManager interface {
     Upgrade(yes bool)
     Remove(packages []string)
     Help() []string
+    Name() string
 }
 
 var found_pm PackageManager = nil

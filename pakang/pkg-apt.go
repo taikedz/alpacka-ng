@@ -8,6 +8,8 @@ func NewAptPM(flags []string) AptPM {
     return AptPM{flags}
 }
 
+func (self AptPM) Name() string { return "APT package manager" }
+
 func (self AptPM) Help() []string {
     return []string{
         "clean : Clean the cache",

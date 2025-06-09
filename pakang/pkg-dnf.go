@@ -10,6 +10,8 @@ func NewDnfPM(pm_cmd string, flags []string) DnfPM {
     return DnfPM{pm_cmd, flags}
 }
 
+func (self DnfPM) Name() string { return "DNF (or yum)" }
+
 func (self DnfPM) Help() []string {
     return []string{
         "clean : Clean the cache",

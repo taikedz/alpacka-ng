@@ -10,10 +10,11 @@ func NewApkPM(flags []string) ApkPM {
     return ApkPM{flags}
 }
 
+func (self ApkPM) Name() string { return "apk (alpine)" }
+
 func (self ApkPM) Help() []string {
     return []string{
         "clean : Clean the cache",
-        "fix : fix broken dependencies",
     }
 }
 

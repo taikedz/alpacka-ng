@@ -8,6 +8,8 @@ func NewZypperPM(flags []string) ZypperPM {
     return ZypperPM{flags}
 }
 
+func (self ZypperPM) Name() string { return "zypper" }
+
 func (self ZypperPM) Help() []string {
     return []string{
         "clean : Clean the cache",

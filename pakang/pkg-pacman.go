@@ -11,6 +11,8 @@ func NewPacmanPM(flags []string) PacmanPM {
     return PacmanPM{flags, &updated}
 }
 
+func (self PacmanPM) Name() string { return "pacman" }
+
 func (self PacmanPM) Help() []string {
     return []string{
         // "clean : Clean the cache",
