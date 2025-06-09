@@ -3,5 +3,5 @@ package main
 import "github.com/taikedz/alpacka-ng/pakang"
 
 func main() {
-    pakang.Main("Alpacka/NG")
+	pakang.Main("Alpacka/NG")
 }
