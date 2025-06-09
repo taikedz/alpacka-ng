@@ -10,6 +10,7 @@ import (
 )
 
 func Main(progname string) {
+    // ==== Argument definitions
     parser := goargs.NewParser(fmt.Sprintf("%s - Unified package manager command\n\n%s [OPTS] [PACKAGES ...]\n\nOPTS:", progname, progname))
 
     update := parser.Bool("update-index", false, "Update the package index (relevant package managers)")
@@ -53,6 +54,8 @@ func Main(progname string) {
     err := parser.ParseCliArgs()
     FailIf(err, 1, "Invalid args")
 
+    // ======== Activity
+
     if *print_version {
         fmt.Printf("%s %s\n", progname, VERSION)
         return
@@ -87,6 +90,8 @@ func Main(progname string) {
     case "warn":
         doWarningAction(*warning_message, *warning_action)
     default:
+        // search happens if no Extra is set -
+        //   this allows Extra to also override default behaviours
         pman.Extra(parser.Args())
     }
 }
