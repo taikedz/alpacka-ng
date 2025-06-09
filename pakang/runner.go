@@ -31,7 +31,7 @@ func RunCmd(flags int, tokens ... string) Result {
 }
 
 func RunCmdOut(dump bool, flags int, tokens ... string) Result {
-	if len(tokens) < 1 {
+    if len(tokens) < 1 {
         fmt.Printf("FATAL - tokens not supplied")
         os.Exit(1)
     }

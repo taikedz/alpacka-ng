@@ -1,11 +1,11 @@
 package pakang
 
 import (
-	"os"
-	"fmt"
-	"strings"
+    "os"
+    "fmt"
+    "strings"
 
-	"gopkg.in/yaml.v3"
+    "gopkg.in/yaml.v3"
 )
 
 /* Load a YAML manifest file
@@ -41,85 +41,85 @@ but it still grates me...
 */
 
 type Manifest struct {
-	Alpacka Sections
+    Alpacka Sections
 }
 
 type Sections struct {
-	Variants []Variant
-	PackageGroups map[string][]string `yaml:"package-groups"`
+    Variants []Variant
+    PackageGroups map[string][]string `yaml:"package-groups"`
 }
 
 type Variant struct {
-	Release string // to allow shorthands, we treat this as a plain string
-	Groups string
+    Release string // to allow shorthands, we treat this as a plain string
+    Groups string
 }
 
 func LoadManifest(mfest_path string) Manifest {
-	data, err := os.ReadFile(mfest_path)
-	FailIf(err, 1, "Could not read manifest %s", mfest_path)
+    data, err := os.ReadFile(mfest_path)
+    FailIf(err, 1, "Could not read manifest %s", mfest_path)
 
-	manifest := Manifest{}
-	yaml.Unmarshal(data, &manifest)
-	return manifest
+    manifest := Manifest{}
+    yaml.Unmarshal(data, &manifest)
+    return manifest
 }
 
 func (self Manifest) GetPackageGroups() []string {
-	osr := LoadOsRelease()
+    osr := LoadOsRelease()
 
-	for _, variant := range self.Alpacka.Variants {
-		comp_strs := SplitStringMultichar(variant.Release, ", ")
-		comp_strs = ExcludeStr(comp_strs, []string{""})
+    for _, variant := range self.Alpacka.Variants {
+        comp_strs := SplitStringMultichar(variant.Release, ", ")
+        comp_strs = ExcludeStr(comp_strs, []string{""})
 
-		matched := true
-		for _,str := range comp_strs {
-			param, op, value := getComparison(str)
-			switch op {
-			case ">=":
-				matched = matched && osr.ParamGteValueInts(param, value)
-			case "<=":
-				matched = matched && osr.ParamLteValueInts(param, value)
-			case "==":
-				matched = matched && osr.Param(param) == value
-			case "=~":
-				matched = matched && osr.ParamContains(param, value)
-			default:
-				Fail(1, fmt.Sprintf("Unrecognised release comparison '%s' (%s)", op, str), nil)
-			}
-		}
-		if matched {
-			groups := SplitStringMultichar(variant.Groups, ", ") // FIXME - use regex
-			groups = ExcludeStr(groups, []string{""})
-			return groups
-		}
-	}
+        matched := true
+        for _,str := range comp_strs {
+            param, op, value := getComparison(str)
+            switch op {
+            case ">=":
+                matched = matched && osr.ParamGteValueInts(param, value)
+            case "<=":
+                matched = matched && osr.ParamLteValueInts(param, value)
+            case "==":
+                matched = matched && osr.Param(param) == value
+            case "=~":
+                matched = matched && osr.ParamContains(param, value)
+            default:
+                Fail(1, fmt.Sprintf("Unrecognised release comparison '%s' (%s)", op, str), nil)
+            }
+        }
+        if matched {
+            groups := SplitStringMultichar(variant.Groups, ", ") // FIXME - use regex
+            groups = ExcludeStr(groups, []string{""})
+            return groups
+        }
+    }
 
-	return nil
+    return nil
 }
 
 func getComparison(compstr string) (string, string, string) {
-	for _,op := range []string{">=", "<=", "==", "=~"} {
-		if strings.Index(compstr, op) > 0 {
-			tokens := strings.SplitN(compstr, op, 2)
-			return tokens[0], op, tokens[1]
-		}
-	}
-	Fail(1, fmt.Sprintf("Could not split comparison: %s", compstr), nil)
-	return "","","" //for compiler
+    for _,op := range []string{">=", "<=", "==", "=~"} {
+        if strings.Index(compstr, op) > 0 {
+            tokens := strings.SplitN(compstr, op, 2)
+            return tokens[0], op, tokens[1]
+        }
+    }
+    Fail(1, fmt.Sprintf("Could not split comparison: %s", compstr), nil)
+    return "","","" //for compiler
 }
 
 func (self Manifest) GetPackages() ([]string, error) {
-	pgroups := self.GetPackageGroups()
-	if pgroups == nil { return nil, fmt.Errorf("No package groups matched") }
-	packages := []string{}
+    pgroups := self.GetPackageGroups()
+    if pgroups == nil { return nil, fmt.Errorf("No package groups matched") }
+    packages := []string{}
 
-	for name,packs := range self.Alpacka.PackageGroups {
-		if ! ArrayHas(name, pgroups) { continue }
-		for _,p := range packs {
-			if ! ArrayHas(p, packages) {
-				packages = append(packages, p)
-			}
-		}
-	}
+    for name,packs := range self.Alpacka.PackageGroups {
+        if ! ArrayHas(name, pgroups) { continue }
+        for _,p := range packs {
+            if ! ArrayHas(p, packages) {
+                packages = append(packages, p)
+            }
+        }
+    }
 
-	return packages, nil
+    return packages, nil
 }
