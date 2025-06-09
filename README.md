@@ -8,6 +8,11 @@ Alpacka provides:
   * distro hoppers' boon!
 * a single command for all common operations (no `apt-cache`/`apt-get` differentiation)
 * intuitive flags and corresponding short-flags (looking at you `pacman`) for common operations
+* Mode-switching flags
+  * `paf minetest` - search for minetest
+  * `paf minetest -s` - show detailed info for minetest
+  * `paf minetest -si` - install minetest - equivalent to `paf minetest -i` (prior `-s` is ignored)
+  * for lazy people like me...
 * no runtime dependencies (limitation of original alpacka)
 * manifest spec to help achieve same install when same packages differ in names across distros
   * e.g. python=python2 on old ubuntu and python=python3 on new ubuntu
@@ -68,7 +73,7 @@ paf -u -g -y
 paf -ugy
 
 
-# Install from a packages file
+# Install from a packages manifest file
 paf -m -M packages.yaml
 ```
 
