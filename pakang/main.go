@@ -83,7 +83,7 @@ func Main(progname string) {
             Fail(1, "No manifest file specified", nil)
         }
         if *update { pman.Update() }
-        installManifest(pman, manifestfile)
+        installManifest(pman, *manifestfile)
     case "warn":
         doWarningAction(*warning_message, *warning_action)
     default:
@@ -117,10 +117,8 @@ func doWarningAction(message, action string) {
 
 func installManifest(pman PackageManager, manifest_path string) {
     manifest := LoadManifest(manifest_path)
-    packs := manifest.GetPackages()
-    if packs == nil {
-        Fail(1, "No package groups apply to this system.", nil)
-    }
+    packs, err := manifest.GetPackages()
+    FailIf(err, 1, "No package groups apply to this system")
     pman.Install(true, packs)
 }
 

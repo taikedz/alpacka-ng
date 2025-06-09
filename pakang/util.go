@@ -26,6 +26,8 @@ func ExcludeStr(input []string, exclude []string) []string {
 			retained = append(retained, s)
 		}
 	}
+
+	return retained
 }
 
 func ExtractValueOfKey(key string, items []string) (string, error) {

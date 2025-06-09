@@ -2,6 +2,7 @@ package pakang
 
 import (
 	"os"
+	"fmt"
 	"gopkg.in/yaml.v3"
 )
 
@@ -72,9 +73,9 @@ func (self Manifest) GetPackageGroups() []string {
 	return nil
 }
 
-func (self manifest) GetPackages() []string, error {
+func (self Manifest) GetPackages() ([]string, error) {
 	pgroups := self.GetPackageGroups()
-	if pgroups == nil { return nil }
+	if pgroups == nil { return nil, fmt.Errorf("No package groups matched") }
 
 	// iterate groups
 	// load all grroup contents
