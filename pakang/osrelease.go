@@ -21,7 +21,7 @@ func (self OsRelease) ParamContains(param, subvalue string) bool {
 	for key, val := range self.data {
 		if param != key { continue }
 
-		return strings.Index(subvalue, val) >= 0
+		return strings.Index(val, subvalue) >= 0
 	}
 	return false
 }

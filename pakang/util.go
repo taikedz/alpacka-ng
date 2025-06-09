@@ -35,7 +35,7 @@ func ExtractValueOfKey(key string, items []string) (string, error) {
 	// locate key , split on '=', return the value
 	key_eq := fmt.Sprintf("%s=", key)
 	for _, item := range(items) {
-		if strings.Index(key_eq, item) == 0 {
+		if strings.Index(item, key_eq) == 0 {
 			return item[len(key_eq):], nil
 		}
 	}

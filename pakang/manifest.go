@@ -3,6 +3,8 @@ package pakang
 import (
 	"os"
 	"fmt"
+	"strings"
+
 	"gopkg.in/yaml.v3"
 )
 
@@ -62,24 +64,62 @@ func LoadManifest(mfest_path string) Manifest {
 }
 
 func (self Manifest) GetPackageGroups() []string {
+	osr := LoadOsRelease()
+
 	for _, variant := range self.Alpacka.Variants {
 		comp_strs := SplitStringMultichar(variant.Release, ", ")
 		comp_strs = ExcludeStr(comp_strs, []string{""})
 
-		// iterate comp_strs - apply all comparisons, if all return true
-		//  then return groups from this variant
+		matched := true
+		for _,str := range comp_strs {
+			param, op, value := getComparison(str)
+			switch op {
+			case ">=":
+				matched = matched && osr.ParamGteValueInts(param, value)
+			case "<=":
+				matched = matched && osr.ParamLteValueInts(param, value)
+			case "==":
+				matched = matched && osr.Param(param) == value
+			case "=~":
+				matched = matched && osr.ParamContains(param, value)
+			default:
+				Fail(1, fmt.Sprintf("Unrecognised release comparison '%s' (%s)", op, str), nil)
+			}
+		}
+		if matched {
+			groups := SplitStringMultichar(variant.Groups, ", ") // FIXME - use regex
+			groups = ExcludeStr(groups, []string{""})
+			return groups
+		}
 	}
 
 	return nil
 }
 
+func getComparison(compstr string) (string, string, string) {
+	for _,op := range []string{">=", "<=", "==", "=~"} {
+		if strings.Index(compstr, op) > 0 {
+			tokens := strings.SplitN(compstr, op, 2)
+			return tokens[0], op, tokens[1]
+		}
+	}
+	Fail(1, fmt.Sprintf("Could not split comparison: %s", compstr), nil)
+	return "","","" //for compiler
+}
+
 func (self Manifest) GetPackages() ([]string, error) {
 	pgroups := self.GetPackageGroups()
 	if pgroups == nil { return nil, fmt.Errorf("No package groups matched") }
+	packages := []string{}
 
-	// iterate groups
-	// load all grroup contents
-	// remove duplicate entries
+	for name,packs := range self.Alpacka.PackageGroups {
+		if ! ArrayHas(name, pgroups) { continue }
+		for _,p := range packs {
+			if ! ArrayHas(p, packages) {
+				packages = append(packages, p)
+			}
+		}
+	}
 
-	return pgroups, nil
+	return packages, nil
 }

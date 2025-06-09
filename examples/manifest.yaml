@@ -1,8 +1,10 @@
 alpacka:
   variants:
-  - release: version_id<=22, id=~fedora
+  - release: VERSION_ID<=22, ID=~fedora
     groups: common, fedora
-  - release: id=~ubuntu
+  - release: ID_LIKE=~debian
+    groups: common, debian
+  - release: ID_LIKE=~suse
     groups: common, debian
 
   package-groups:
