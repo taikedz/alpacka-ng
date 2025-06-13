@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-if ! bash ci/version-is-bumped.sh; then
+if ! go run ci/version-is-bumped.go; then
     echo "(( warn: Bump the version string to newer than the last tagged version! ))"
 fi
 

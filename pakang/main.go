@@ -57,7 +57,7 @@ func Main(progname string) {
 	// ======== Activity
 
 	if *print_version {
-		fmt.Printf("%s %s\n", progname, VERSION)
+		fmt.Printf("%s %s\n", progname, GetVersionString())
 		return
 	}
 

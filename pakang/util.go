@@ -85,7 +85,7 @@ func SplitStringsChar(data []string, char string) []string {
 }
 
 // Check that held_data >= reference
-func ArrIntsGte(reference, held_data []int) bool {
+func ArrIntsGt_b(reference, held_data []int, equalok bool) bool {
 
 	z := max(len(reference), len(held_data))
 	for i := 0; i < z; i++ {
@@ -104,11 +104,20 @@ func ArrIntsGte(reference, held_data []int) bool {
 			return false
 		}
 	}
-	return true // they are equal by now
+	// they are equal at this point
+	return equalok
+}
+
+func ArrIntsGte(reference, held_data []int) bool {
+	return ArrIntsGt_b(reference, held_data, true)
+}
+
+func ArrIntsGt(reference, held_data []int) bool {
+	return ArrIntsGt_b(reference, held_data, false)
 }
 
 // Check that held_data <= reference
-func ArrIntsLte(reference, held_data []int) bool {
+func ArrIntsLt_b(reference, held_data []int, equalok bool) bool {
 
 	z := max(len(reference), len(held_data))
 	for i := 0; i < z; i++ {
@@ -127,7 +136,16 @@ func ArrIntsLte(reference, held_data []int) bool {
 			return false
 		}
 	}
-	return true // they are equal by now
+	// they are equal by now
+	return equalok
+}
+
+func ArrIntsLte(reference, held_data []int) bool {
+	return ArrIntsLt_b(reference, held_data, true)
+}
+
+func ArrIntsLt(reference, held_data []int) bool {
+	return ArrIntsLt_b(reference, held_data, false)
 }
 
 func ExtractInts(data string) ([]int, error) {

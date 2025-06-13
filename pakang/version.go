@@ -1,3 +1,15 @@
 package pakang
 
-const VERSION string = "v0.0.4"
+import "fmt"
+
+const VER_MAJ int = 0
+const VER_MIN int = 0
+const VER_PATCH int = 5
+
+func GetVersionString() string {
+	return fmt.Sprintf("v%d.%d.%d", VER_MAJ, VER_MIN, VER_PATCH)
+}
+
+func GetVersionInts() []int {
+	return []int{VER_MAJ, VER_MIN, VER_PATCH}
+}
