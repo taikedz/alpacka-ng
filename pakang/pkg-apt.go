@@ -29,7 +29,7 @@ func (self AptPM) Extra(terms []string) {
 		self.clean()
 	} else if ArrayHas("fix", self.extraflags) {
 		self.fixbroken()
-	} else if val, err := ExtractValueOfKey("ppa", self.extraflags); err != nil {
+	} else if val, err := ExtractValueOfKey("ppa", self.extraflags); err == nil {
 		self.addPpa(val)
 	} else {
 		self.Search(terms)

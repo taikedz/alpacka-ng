@@ -28,7 +28,7 @@ Download the appropriate binary:
 
 ```sh
 # Use the version for you
-version=0.0.3
+version=0.0.4
 
 # set to "paf-alpine" for alpine deployments
 variant=paf
