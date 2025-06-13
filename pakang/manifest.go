@@ -77,6 +77,10 @@ func (self Manifest) GetPackageGroups() []string {
 			case ">=":
 				matched = matched && osr.ParamGteValueInts(param, value)
 			case "<=":
+				matched = matched && osr.ParamLtValueInts(param, value)
+			case ">":
+				matched = matched && osr.ParamGtValueInts(param, value)
+			case "<":
 				matched = matched && osr.ParamLteValueInts(param, value)
 			case "==":
 				matched = matched && osr.Param(param) == value
@@ -97,7 +101,7 @@ func (self Manifest) GetPackageGroups() []string {
 }
 
 func getComparison(compstr string) (string, string, string) {
-	for _, op := range []string{">=", "<=", "==", "=~"} {
+	for _, op := range []string{">=", "<=", "<", ">", "==", "=~"} {
 		if strings.Index(compstr, op) > 0 {
 			tokens := strings.SplitN(compstr, op, 2)
 			return tokens[0], op, tokens[1]

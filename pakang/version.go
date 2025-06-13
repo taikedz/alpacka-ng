@@ -4,7 +4,7 @@ import "fmt"
 
 const VER_MAJ int = 0
 const VER_MIN int = 0
-const VER_PATCH int = 5
+const VER_PATCH int = 6
 
 func GetVersionString() string {
 	return fmt.Sprintf("v%d.%d.%d", VER_MAJ, VER_MIN, VER_PATCH)

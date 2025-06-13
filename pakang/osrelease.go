@@ -32,12 +32,7 @@ func (self OsRelease) ParamGteValueInts(param string, expect string) bool {
 	if self.data[param] == "" {
 		return false
 	}
-
-	sys_data, err := ExtractInts(self.data[param])
-	FailIf(err, 1, "Failed number parsing on OSR")
-
-	reference, err := ExtractInts(expect)
-	FailIf(err, 1, "Failed number parsing on query")
+	sys_data, reference := extractInts(self.data[param], expect)
 
 	return ArrIntsGte(reference, sys_data)
 }
@@ -46,14 +41,37 @@ func (self OsRelease) ParamLteValueInts(param string, expect string) bool {
 	if self.data[param] == "" {
 		return false
 	}
+	sys_data, reference := extractInts(self.data[param], expect)
 
-	sys_data, err := ExtractInts(self.data[param])
+	return ArrIntsLte(reference, sys_data)
+}
+
+func (self OsRelease) ParamGtValueInts(param string, expect string) bool {
+	if self.data[param] == "" {
+		return false
+	}
+	sys_data, reference := extractInts(self.data[param], expect)
+
+	return ArrIntsGt(reference, sys_data)
+}
+
+func (self OsRelease) ParamLtValueInts(param string, expect string) bool {
+	if self.data[param] == "" {
+		return false
+	}
+	sys_data, reference := extractInts(self.data[param], expect)
+
+	return ArrIntsLt(reference, sys_data)
+}
+
+func extractInts(data, expect string) ([]int, []int) {
+	sys_data, err := ExtractInts(data)
 	FailIf(err, 1, "Failed number parsing on OSR")
 
 	reference, err := ExtractInts(expect)
 	FailIf(err, 1, "Failed number parsing on query")
 
-	return ArrIntsLte(reference, sys_data)
+	return sys_data, reference
 }
 
 func max(a, b int) int {
