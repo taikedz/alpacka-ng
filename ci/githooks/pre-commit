@@ -2,9 +2,7 @@
 
 set -euo pipefail
 
-if ! go run ci/version-is-bumped.go; then
-    echo "(( warn: Bump the version string to newer than the last tagged version! ))"
-fi
+go run ci/version-is-bumped.go || true
 
 if [[ "${IGNORE_PRECOMMIT_HOOK:-}" = true ]]; then
     exit 0
