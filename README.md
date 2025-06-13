@@ -24,22 +24,15 @@ Alpacka provides:
 
 ## Download + Install
 
-Download the appropriate binary:
+Download the appropriate binary (replace with `curl` as needed):
 
 ```sh
 # Use the version for you
-version=0.0.4
+version=0.0.5
 
-# set to "paf-alpine" for alpine deployments
-variant=paf
-
-# On Ubuntu/Fedora/etc ... various GNU/Linux:
-wget https://github.com/taikedz/alpacka-ng/releases/download/v${version}/${variant} -O /tmp/paf-dl
-
-# Install to a location in root's `PATH` list - for example `/usr/local/bin`
-
-chmod 755 /tmp/paf-dl
-sudo mv -i /tmp/paf-dl /usr/local/bin/paf
+wget https://github.com/taikedz/alpacka-ng/releases/download/v${version}/paf-${version}-bundle.tar.gz
+tar xzf "paf-${version}-bundle.tar.gz"
+./paf-bundle/install.sh
 ```
 
 ## Build
