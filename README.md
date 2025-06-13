@@ -138,6 +138,8 @@ Comparisons supported:
 
 * `>=` - greater than or equal to specified value
 * `<=` - less than or equal to specified value
+* `>` - greater than specified value
+* `<` - less than specified value
 * `==` - exactly equal to specified value
 * `=~` - release file contains specified value
 
