@@ -8,7 +8,7 @@ if ! go run "$HERE/version-is-bumped.go"; then
     exit 1
 fi
 
-bash "$HERE/../build.sh"
+bash "$HERE/make-bundle.sh"
 
 if ! git status | grep "working tree clean" -q; then
     echo "Please ensure clean working tree before proceeding."

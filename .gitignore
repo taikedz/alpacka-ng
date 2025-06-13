@@ -1,3 +1,4 @@
 *.swp
 bin/
 paf-bundle*
+bundles/
