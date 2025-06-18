@@ -36,3 +36,10 @@ func TestArrIntsLte(t *testing.T) {
 	gocheck.Equal(t, true, ArrIntsLte([]int{1, 2}, []int{1, 0, 1}))
 	gocheck.Equal(t, false, ArrIntsLte([]int{1, 8}, []int{2, 5}))
 }
+
+func TestExtractSection(t *testing.T) {
+	section_data := "Head: slop\nDescription-en: hello\n there\nRubbish: goop\nDescription-md5: more\n and more"
+	exp := "Description-en: hello\n there\nDescription-md5: more\n and more"
+	lines := extractSection("Description", section_data)
+	gocheck.Equal(t, exp, lines)
+}

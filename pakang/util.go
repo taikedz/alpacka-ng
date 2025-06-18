@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"regexp"
 )
 
 func ArrayHas(term string, stuff []string) bool {
@@ -160,4 +161,33 @@ func ExtractInts(data string) ([]int, error) {
 	}
 
 	return nums, nil
+}
+
+
+func extractSection(section, text string) string {
+	lines := strings.Split(text, "\n")
+	var desc_lines []string
+	extracting := false
+	pat, err := regexp.Compile(fmt.Sprintf("%s(-[^:]+?):", section))
+	FailIf(err, 1, "Dev error: Invalid section pattern")
+
+	for _, line := range lines {
+		if pat.MatchString(line) {
+			extracting = true
+			desc_lines = append(desc_lines, line)
+		} else if extracting && len(line) > 0 && line[0] == ' ' {
+			desc_lines = append(desc_lines, line)
+		} else {
+			extracting = false
+		}
+	}
+	return strings.Join(desc_lines, "\n")
+}
+
+func parapend(prefix string, data []string, suffix string) []string {
+	var new_strings []string
+	for _, item := range data {
+		new_strings = append(new_strings, fmt.Sprintf("%s%s%s", prefix, item, suffix))
+	}
+	return new_strings
 }

@@ -2,9 +2,10 @@ package pakang
 
 import "fmt"
 
+// update readme too ;-)
 const VER_MAJ int = 0
 const VER_MIN int = 0
-const VER_PATCH int = 6
+const VER_PATCH int = 7
 
 func GetVersionString() string {
 	return fmt.Sprintf("v%d.%d.%d", VER_MAJ, VER_MIN, VER_PATCH)

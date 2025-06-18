@@ -10,6 +10,7 @@ const NEED_ROOT int = 1
 
 type Result struct {
 	code int
+	Stdout string
 	err  error
 }
 
@@ -20,6 +21,10 @@ func (r Result) OrFail(msg string) bool {
 		Fail(r.code, "Error", r.err)
 	}
 	return true
+}
+
+func (r Result) GetError() error {
+	return r.err
 }
 
 func (r Result) Ok() bool {
@@ -53,19 +58,23 @@ func RunCmdOut(dump bool, flags int, tokens ...string) Result {
 	if dump {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
-	}
-	if err := cmd.Start(); err != nil {
-		return Result{-1, fmt.Errorf("Execution error: %v\n", err)}
-	}
-
-	// https://stackoverflow.com/a/10385867/2703818
-	if err := cmd.Wait(); err != nil {
-		if exiterr, ok := err.(*exec.ExitError); ok {
-			return Result{exiterr.ExitCode(), exiterr}
-		} else {
-			return Result{-1, err}
+		if err := cmd.Start(); err != nil {
+			return Result{-1, "", fmt.Errorf("Execution error: %v\n", err)}
 		}
+
+		// https://stackoverflow.com/a/10385867/2703818
+		if err := cmd.Wait(); err != nil {
+			if exiterr, ok := err.(*exec.ExitError); ok {
+				return Result{exiterr.ExitCode(), "", exiterr}
+			} else {
+				return Result{-1, "", err}
+			}
+		}
+		return Result{0, "", nil}
+	} else {
+		output, err := cmd.Output()
+		FailIf(err, 1, "Failed to gather output")
+		return Result{0, string(output), nil}
 	}
 
-	return Result{0, nil}
 }

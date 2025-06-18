@@ -30,7 +30,7 @@ Download the appropriate binary (replace with `curl` as needed):
 
 ```sh
 # Use the version for you
-version=0.0.6
+version=0.0.7
 
 wget https://github.com/taikedz/alpacka-ng/releases/download/v${version}/paf-${version}-bundle.tar.gz
 tar xzf "paf-${version}-bundle.tar.gz"
