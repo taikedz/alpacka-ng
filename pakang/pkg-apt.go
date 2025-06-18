@@ -1,5 +1,9 @@
 package pakang
 
+import (
+	"fmt"
+)
+
 type AptPM struct {
 	extraflags []string
 }
@@ -15,6 +19,7 @@ func (self AptPM) Help() []string {
 		"clean : Clean the cache",
 		"fix : fix broken dependencies",
 		"ppa=$PPA_ID : Add a PPA",
+		"desc : In 'show' mode, display description field only",
 	}
 }
 
@@ -51,7 +56,15 @@ func (self AptPM) addPpa(ppa_id string) {
 }
 
 func (self AptPM) Show(pkg string) {
-	RunCmd(0, "apt-cache", "show", pkg).OrFail("Error")
+	if ArrayHas("desc", self.extraflags) {
+		res := RunCmdOut(false, 0, "apt-cache", "show", pkg)
+		FailIf(res.GetError(), 1, "Could not get info for '%s'", pkg)
+
+		desc := extractSection("Description", res.Stdout)
+		fmt.Printf("%s\n", desc)
+	} else {
+		RunCmd(0, "apt-cache", "show", pkg).OrFail("Error")
+	}
 }
 
 func (self AptPM) Update() {
