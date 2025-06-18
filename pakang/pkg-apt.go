@@ -18,7 +18,7 @@ func (self AptPM) Help() []string {
 	return []string{
 		"fix : fix broken dependencies",
 		"ppa=$PPA_ID : Add a PPA",
-		"desc : In 'show' mode, display description field only",
+		"desc : Display descriptions of specified packages",
 	}
 }
 
@@ -31,6 +31,11 @@ func (self AptPM) Search(terms []string) {
 func (self AptPM) NoAction(terms []string) {
 	if ArrayHas("fix", self.extraflags) {
 		self.fixbroken()
+	} else if ArrayHas("desc", self.extraflags) {
+		for _,pkg := range terms {
+			fmt.Printf("\n--- %s ---\n", pkg)
+			self.Show(pkg)
+		}
 	} else if val, err := ExtractValueOfKey("ppa", self.extraflags); err == nil {
 		self.addPpa(val)
 	} else {
