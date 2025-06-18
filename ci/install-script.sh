@@ -3,7 +3,7 @@
 HERE=`dirname "$0"`
 cd "$HERE"
 
-if [ "$UID" == 0 ] || [ `whoami` == root ]; then
+if [ "$UID" = 0 ] || [ `whoami` = root ]; then
 
     if [ "$ID" = alpine ]; then
         cp -i bin/paf-alpine /usr/local/bin/paf
