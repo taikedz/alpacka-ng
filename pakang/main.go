@@ -15,14 +15,14 @@ func Main(progname string) {
 
 	update := parser.Bool("update-index", false, "Update the package index (relevant package managers)")
 	parser.SetShortFlag('u', "update-index")
-	yes := parser.Bool("yes", false, "Automatcially accept (install/upgrade)")
+	yes := parser.Bool("yes", false, "Automatically accept (install/upgrade)")
 	parser.SetShortFlag('y', "yes")
 	print_version := parser.Bool("version", false, "Show version and exit")
 	parser.SetShortFlag('V', "version")
 
-	warning_message := parser.String("warning-message", "", "A warning message")
+	warning_message := parser.String("warning-message", "", "A warning message (-w mode)")
 	parser.SetShortFlag('W', "warning-message")
-	warning_action := parser.Choices("warning-action", []string{"", "install", "upgrade", "remove", "manifest"}, "Action for the warning message")
+	warning_action := parser.Choices("warning-action", []string{"", "install", "upgrade", "remove", "manifest"}, "Action for the warning message (-w mode)")
 	parser.SetShortFlag('A', "warning-action")
 	override_warning := parser.Bool("ignore-warnings", false, "Use this flag to ignore the warning.")
 
