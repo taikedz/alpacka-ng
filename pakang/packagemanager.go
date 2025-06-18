@@ -31,9 +31,6 @@ func GetPackageManager(extra []string) PackageManager {
 	} else if checkFor("yum") {
 		return NewDnfPM("yum", extra)
 
-	} else if checkFor("apk") {
-		return NewApkPM(extra)
-
 	} else if checkFor("pacman") {
 		return NewPacmanPM(extra)
 

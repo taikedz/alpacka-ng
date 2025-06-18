@@ -32,9 +32,9 @@ Download the appropriate binary (replace with `curl` as needed):
 # Use the version for you
 version=0.0.8
 
-wget https://github.com/taikedz/alpacka-ng/releases/download/v${version}/paf-${version}-bundle.tar.gz
-tar xzf "paf-${version}-bundle.tar.gz"
-./paf-bundle/install.sh
+wget https://github.com/taikedz/alpacka-ng/releases/download/v${version}/paf
+chmod 755 paf
+sudo cp ./paf /usr/local/bin/paf
 ```
 
 ## Build
@@ -78,7 +78,6 @@ paf -m -M packages.yaml
 * dnf/yum - Fedora/Red Hat family
 * pacman - Arch family
 * Zypper - OpenSUSE
-* apk - Alpine (note: must be compiled in an Alpine environment to actually support Alpine ...)
 
 May support in future:
 
