@@ -13,9 +13,7 @@ func NewApkPM(flags []string) ApkPM {
 func (self ApkPM) Name() string { return "apk (alpine)" }
 
 func (self ApkPM) Help() []string {
-	return []string{
-		"clean : Clean the cache",
-	}
+	return nil
 }
 
 func (self ApkPM) Search(terms []string) {
@@ -24,15 +22,11 @@ func (self ApkPM) Search(terms []string) {
 	RunCmd(0, cmd...).OrFail("Search failed")
 }
 
-func (self ApkPM) Extra(terms []string) {
-	if ArrayHas("clean", self.extraflags) {
-		self.clean()
-	} else {
-		self.Search(terms)
-	}
+func (self ApkPM) NoAction(terms []string) {
+	self.Search(terms)
 }
 
-func (self ApkPM) clean() {
+func (self ApkPM) Clean() {
 	RunCmd(NEED_ROOT, "apk", "clean").OrFail("Auto clean failed")
 }
 

@@ -12,20 +12,14 @@ func NewDnfPM(pm_cmd string, flags []string) DnfPM {
 func (self DnfPM) Name() string { return "DNF (or yum)" }
 
 func (self DnfPM) Help() []string {
-	return []string{
-		"clean : Clean the cache",
-	}
+	return nil
 }
 
-func (self DnfPM) Extra(terms []string) {
-	if ArrayHas("clean", self.extraflags) {
-		self.clean()
-	} else {
-		self.Search(terms)
-	}
+func (self DnfPM) NoAction(terms []string) {
+	self.Search(terms)
 }
 
-func (self DnfPM) clean() {
+func (self DnfPM) Clean() {
 	RunCmd(NEED_ROOT, self.pm_cmd, "clean").OrFail("Clean failed")
 	RunCmd(NEED_ROOT, self.pm_cmd, "autoremove").OrFail("Auto remove failed")
 }

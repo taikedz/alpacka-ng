@@ -13,10 +13,7 @@ func NewPacmanPM(flags []string) PacmanPM {
 func (self PacmanPM) Name() string { return "pacman" }
 
 func (self PacmanPM) Help() []string {
-	return []string{
-		// "clean : Clean the cache",
-		// "fix : fix broken dependencies",
-	}
+	return nil
 }
 
 func (self PacmanPM) Search(terms []string) {
@@ -25,15 +22,11 @@ func (self PacmanPM) Search(terms []string) {
 	RunCmd(0, cmd...).OrFail("Search failed")
 }
 
-func (self PacmanPM) Extra(terms []string) {
-	if ArrayHas("clean", self.extraflags) {
-		self.clean()
-	} else {
-		self.Search(terms)
-	}
+func (self PacmanPM) NoAction(terms []string) {
+	self.Search(terms)
 }
 
-func (self PacmanPM) clean() {
+func (self PacmanPM) Clean() {
 	RunCmd(NEED_ROOT, "pacman", "-Scc").OrFail("Clean failed")
 }
 

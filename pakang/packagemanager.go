@@ -2,12 +2,13 @@ package pakang
 
 type PackageManager interface {
 	Update()
-	Extra(terms []string)
+	NoAction(terms []string)
 	Search(terms []string)
 	Show(pkg string)
 	Install(yes bool, packages []string)
 	Upgrade(yes bool)
 	Remove(packages []string)
+	Clean()
 	Help() []string
 	Name() string
 }

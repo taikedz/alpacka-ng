@@ -13,12 +13,15 @@ func Main(progname string) {
 	// ==== Argument definitions
 	parser := goargs.NewParser(fmt.Sprintf("%s - Unified package manager command\n\n%s [OPTS] [PACKAGES ...]\n\nOPTS:", progname, progname))
 
+	print_version := parser.Bool("version", false, "Show version and exit")
+	parser.SetShortFlag('V', "version")
+
 	update := parser.Bool("update-index", false, "Update the package index (relevant package managers)")
 	parser.SetShortFlag('u', "update-index")
 	yes := parser.Bool("yes", false, "Automatically accept (install/upgrade)")
 	parser.SetShortFlag('y', "yes")
-	print_version := parser.Bool("version", false, "Show version and exit")
-	parser.SetShortFlag('V', "version")
+	do_clean := parser.Bool("clean", false, "Clean cache after execution")
+	parser.SetShortFlag('c', "clean")
 
 	warning_message := parser.String("warning-message", "", "A warning message (-w mode)")
 	parser.SetShortFlag('W', "warning-message")
@@ -42,7 +45,7 @@ func Main(progname string) {
 	var extraflags *[]string
 	pman := GetPackageManager(nil)
 	pman_help := pman.Help()
-	if len(pman_help) > 0 {
+	if pman_help != nil && len(pman_help) > 0 {
 		extraflags = parser.Appender("extra", "Custom flags for system-specific package manager")
 		parser.SetShortFlag('x', "extra")
 
@@ -101,9 +104,13 @@ func Main(progname string) {
 	case "warn":
 		doWarningAction(*warning_message, *warning_action)
 	default:
-		// search happens if no Extra is set -
-		//   this allows Extra to also override default behaviours
-		pman.Extra(parser.Args())
+		// search happens under NoAction
+		//   this allows PackageManager.extraflags to also override default behaviours
+		pman.NoAction(parser.Args())
+	}
+
+	if *do_clean {
+		pman.Clean()
 	}
 }
 

@@ -16,7 +16,6 @@ func (self AptPM) Name() string { return "APT package manager" }
 
 func (self AptPM) Help() []string {
 	return []string{
-		"clean : Clean the cache",
 		"fix : fix broken dependencies",
 		"ppa=$PPA_ID : Add a PPA",
 		"desc : In 'show' mode, display description field only",
@@ -29,10 +28,8 @@ func (self AptPM) Search(terms []string) {
 	RunCmd(0, cmd...).OrFail("Search failed")
 }
 
-func (self AptPM) Extra(terms []string) {
-	if ArrayHas("clean", self.extraflags) {
-		self.clean()
-	} else if ArrayHas("fix", self.extraflags) {
+func (self AptPM) NoAction(terms []string) {
+	if ArrayHas("fix", self.extraflags) {
 		self.fixbroken()
 	} else if val, err := ExtractValueOfKey("ppa", self.extraflags); err == nil {
 		self.addPpa(val)
@@ -41,7 +38,7 @@ func (self AptPM) Extra(terms []string) {
 	}
 }
 
-func (self AptPM) clean() {
+func (self AptPM) Clean() {
 	RunCmd(NEED_ROOT, "apt-get", "autoclean").OrFail("Auto clean failed")
 	RunCmd(NEED_ROOT, "apt-get", "autoremove").OrFail("Atu remove failed")
 }

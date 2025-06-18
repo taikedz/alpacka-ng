@@ -12,7 +12,6 @@ func (self ZypperPM) Name() string { return "zypper" }
 
 func (self ZypperPM) Help() []string {
 	return []string{
-		"clean : Clean the cache",
 		"fix : fix broken dependencies",
 	}
 }
@@ -23,15 +22,11 @@ func (self ZypperPM) Search(terms []string) {
 	RunCmd(0, cmd...).OrFail("Search failed")
 }
 
-func (self ZypperPM) Extra(terms []string) {
-	if ArrayHas("clean", self.extraflags) {
-		self.clean()
-	} else {
-		self.Search(terms)
-	}
+func (self ZypperPM) NoAction(terms []string) {
+	self.Search(terms)
 }
 
-func (self ZypperPM) clean() {
+func (self ZypperPM) Clean() {
 	RunCmd(NEED_ROOT, "zypper", "clean").OrFail("Clean failed")
 }
 
