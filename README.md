@@ -39,7 +39,7 @@ sudo cp ./paf /usr/local/bin/paf
 
 ## Build
 
-You need the go build tools on your system. Please see <https://go.dev/doc/install>
+You need the go build tools on your system (please see <https://go.dev/doc/install>), or docker, or podman.
 
 Then run
 
