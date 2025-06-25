@@ -5,7 +5,8 @@ import (
 	"os"
 )
 
-// Always
+/* Immediately exit the program with the specified error code.
+*/
 func Fail(code int, message string, err error) {
 	if err == nil {
 		fmt.Println(message)
