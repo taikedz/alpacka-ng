@@ -9,6 +9,6 @@ if [[ "${IGNORE_PRECOMMIT_HOOK:-}" = true ]]; then
 fi
 
 go test ./pakang/
-ci/test-resolution.sh
+ci/test-behaviours.sh
 
 ./build.sh

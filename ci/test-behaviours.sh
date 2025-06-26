@@ -14,4 +14,4 @@ else
     . .venv/bin/activate
 fi
 
-pytest test-resolution/ "$@"
+pytest test-behaviour/ "$@"
