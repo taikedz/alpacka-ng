@@ -25,6 +25,7 @@ func (self DnfPM) Clean() {
 }
 
 func (self DnfPM) Search(terms []string) {
+	if len(terms) == 0 { return }
 	cmd := []string{self.pm_cmd, "search"}
 	cmd = append(cmd, terms...)
 	RunCmd(0, cmd...)

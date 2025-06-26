@@ -1,5 +1,9 @@
 package pakang
 
+import (
+	"os"
+)
+
 type PackageManager interface {
 	Update()
 	NoAction(terms []string)
@@ -16,7 +20,8 @@ type PackageManager interface {
 var found_pm PackageManager = nil
 
 func checkFor(cmd string) bool {
-	return RunCmdOut(false, 0, "which", cmd).Ok()
+	// set PAF_TEST_PMAN to an explicit package manager (for testing)
+	return os.Getenv("PAF_TEST_PMAN") == cmd || RunCmdOut(false, 0, "which", cmd).Ok()
 }
 
 func GetPackageManager(extra []string) PackageManager {

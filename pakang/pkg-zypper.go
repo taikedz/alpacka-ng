@@ -17,6 +17,7 @@ func (self ZypperPM) Help() []string {
 }
 
 func (self ZypperPM) Search(terms []string) {
+	if len(terms) == 0 { return }
 	cmd := []string{"zypper", "search"}
 	cmd = append(cmd, terms...)
 	RunCmd(0, cmd...).OrFail("Search failed")

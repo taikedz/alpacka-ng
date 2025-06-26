@@ -23,6 +23,7 @@ func (self AptPM) Help() []string {
 }
 
 func (self AptPM) Search(terms []string) {
+	if len(terms) == 0 { return }
 	cmd := []string{"apt-cache", "search"}
 	cmd = append(cmd, terms...)
 	RunCmd(0, cmd...).OrFail("Search failed")

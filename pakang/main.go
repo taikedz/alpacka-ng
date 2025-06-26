@@ -104,6 +104,9 @@ func Main(progname string) {
 	case "warn":
 		doWarningAction(*warning_message, *warning_action)
 	default:
+		if *update {
+			pman.Update()
+		}
 		// search happens under NoAction
 		//   this allows PackageManager.extraflags to also override default behaviours
 		pman.NoAction(parser.Args())

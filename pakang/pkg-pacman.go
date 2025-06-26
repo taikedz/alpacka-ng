@@ -17,6 +17,7 @@ func (self PacmanPM) Help() []string {
 }
 
 func (self PacmanPM) Search(terms []string) {
+	if len(terms) == 0 { return }
 	cmd := []string{"pacman", "-Ss"}
 	cmd = append(cmd, terms...)
 	RunCmd(0, cmd...).OrFail("Search failed")
