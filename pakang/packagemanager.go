@@ -21,12 +21,18 @@ var found_pm PackageManager = nil
 
 func checkFor(cmd string) bool {
 	// set PAF_TEST_PMAN to an explicit package manager (for testing)
-	return os.Getenv("PAF_TEST_PMAN") == cmd || RunCmdOut(false, 0, "which", cmd).Ok()
+	if pman, present := os.LookupEnv("PAF_TEST_PMAN"); present == true {
+		return pman == cmd
+	} else {
+		return RunCmdOut(false, 0, "which", cmd).Ok()
+	}
+}
+
+func checkPmanRequirements() {
+	RunCmdOut(false, 0, "which", "which").OrFail("Could not run 'which'")
 }
 
 func GetPackageManager(extra []string) PackageManager {
-	RunCmdOut(false, 0, "which", "which").OrFail("Could not run 'which'")
-
 	if checkFor("apt-get") {
 		return NewAptPM(extra)
 

@@ -10,6 +10,7 @@ import (
 )
 
 func Main(progname string) {
+	checkPmanRequirements()
 	// ==== Argument definitions
 	parser := goargs.NewParser(fmt.Sprintf("%s - Unified package manager command\n\n%s [OPTS] [PACKAGES ...]\n\nOPTS:", progname, progname))
 
@@ -42,7 +43,9 @@ func Main(progname string) {
 	manifestfile := parser.String("manifest", "", "Manifest file path (requires '-m' mode)")
 	parser.SetShortFlag('M', "manifest")
 
-	var extraflags *[]string
+	extraflags_value := []string{}
+	extraflags := &extraflags_value
+
 	pman := GetPackageManager(nil)
 	pman_help := pman.Help()
 	if pman_help != nil && len(pman_help) > 0 {
