@@ -35,12 +35,22 @@ class TestPaf(unittest.TestCase):
         pman.ran_with_outputs("bin/paf -u", ["sudo apt-get update"])
         pman.ran_with_outputs("bin/paf minetest", ["apt-cache search minetest"])
         pman.ran_with_outputs("bin/paf minetest -s", ["apt-cache show minetest"])
-        pman.ran_with_outputs("bin/paf htop -si vim", ["sudo apt-get install htop vim"])
+        pman.ran_with_outputs("bin/paf htop -sic vim", [
+            "sudo apt-get install htop vim",
+            "sudo apt-get autoclean",
+            "sudo apt-get autoremove",
+            ])
         pman.ran_with_outputs("bin/paf htop -is vim", ["apt-cache show htop", "apt-cache show vim"])
         pman.ran_with_outputs("bin/paf -iu tmux htop", ["sudo apt-get update", "sudo apt-get install tmux htop"])
         pman.ran_with_outputs("bin/paf -iug nginx", ["sudo apt-get update", "sudo apt-get upgrade"])
-        pman.ran_with_outputs("bin/paf -x fix", ["sudo apt-get -f install"])
+        pman.ran_with_outputs("bin/paf -ru tmux htop", ["sudo apt-get update", "sudo apt-get remove tmux htop"])
 
+        pman.ran_with_outputs("bin/paf -x fix", ["sudo apt-get -f install"])
         pman.ran_with_outputs("bin/paf -x ppa=minetest/minetest",
             ["which add-apt-repository",
             "sudo add-apt-repository minetest/minetest"])
+        pman.ran_with_outputs("bin/paf -x desc htop vim",
+        [
+            "--- htop ---", "apt-cache show htop",
+            "--- vim ---", "apt-cache show vim",
+        ])
