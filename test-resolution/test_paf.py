@@ -85,15 +85,15 @@ class TestPaf(unittest.TestCase):
         pman.ran_with_outputs("bin/paf -ru tmux htop", ["sudo pacman -Sy", "sudo pacman -Rs tmux htop"])
 
     def test_zypper(self):
-        pman = Pman("pacman")
-        pman.ran_with_outputs("bin/paf -u", ["sudo pacman -Sy"])
-        pman.ran_with_outputs("bin/paf minetest", ["pacman -Ss minetest"])
-        pman.ran_with_outputs("bin/paf minetest -s", ["pacman -Si minetest"])
+        pman = Pman("zypper")
+        pman.ran_with_outputs("bin/paf -u", ["sudo zypper refresh"])
+        pman.ran_with_outputs("bin/paf minetest", ["zypper search minetest"])
+        pman.ran_with_outputs("bin/paf minetest -s", ["zypper info minetest"])
         pman.ran_with_outputs("bin/paf htop -sicy vim", [
-            "sudo pacman -S --noconfirm htop vim",
-            "sudo pacman -Scc",
+            "sudo zypper install -y htop vim",
+            "sudo zypper clean",
             ])
-        pman.ran_with_outputs("bin/paf htop -is vim", ["pacman -Si htop", "pacman -Si vim"])
-        pman.ran_with_outputs("bin/paf -iu tmux htop", ["sudo pacman -Sy", "sudo pacman -S tmux htop"])
-        pman.ran_with_outputs("bin/paf -iug nginx", ["sudo pacman -Sy", "sudo pacman -Su"])
-        pman.ran_with_outputs("bin/paf -ru tmux htop", ["sudo pacman -Sy", "sudo pacman -Rs tmux htop"])
+        pman.ran_with_outputs("bin/paf htop -is vim", ["zypper info htop", "zypper info vim"])
+        pman.ran_with_outputs("bin/paf -iu tmux htop", ["sudo zypper refresh", "sudo zypper install tmux htop"])
+        pman.ran_with_outputs("bin/paf -iug nginx", ["sudo zypper refresh", "sudo zypper update"])
+        pman.ran_with_outputs("bin/paf -ru tmux htop", ["sudo zypper refresh", "sudo zypper remove tmux htop"])
