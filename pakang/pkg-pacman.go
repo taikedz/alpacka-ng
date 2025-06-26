@@ -2,12 +2,10 @@ package pakang
 
 type PacmanPM struct {
 	extraflags []string
-	updated    *bool
 }
 
 func NewPacmanPM(flags []string) PacmanPM {
-	updated := false
-	return PacmanPM{flags, &updated}
+	return PacmanPM{flags}
 }
 
 func (self PacmanPM) Name() string { return "pacman" }
@@ -36,14 +34,13 @@ func (self PacmanPM) Show(pkg string) {
 }
 
 func (self PacmanPM) Update() {
-	RunCmd(NEED_ROOT, "pacman", "-Syy").OrFail("PIndex update failed")
-	*self.updated = true
+	RunCmd(NEED_ROOT, "pacman", "-Sy").OrFail("Package index update failed")
 }
 
 func (self PacmanPM) Install(yes bool, packages []string) {
 	cmd := []string{"pacman", "-S"}
 	if yes {
-		cmd = append(cmd, "-y")
+		cmd = append(cmd, "--noconfirm")
 	}
 	cmd = append(cmd, packages...)
 	RunCmd(NEED_ROOT, cmd...).OrFail("Install failed")
@@ -58,12 +55,8 @@ func (self PacmanPM) Remove(packages []string) {
 func (self PacmanPM) Upgrade(yes bool) {
 	cmd := []string{"pacman"}
 	if yes {
-		cmd = append(cmd, "-y")
+		cmd = append(cmd, "--noconfirm")
 	}
-	if *self.updated {
-		cmd = append(cmd, "-Su")
-	} else {
-		cmd = append(cmd, "-Syu")
-	}
+	cmd = append(cmd, "-Su")
 	RunCmd(NEED_ROOT, cmd...).OrFail("Upgrade failed")
 }
