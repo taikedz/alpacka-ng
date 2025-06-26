@@ -4,3 +4,5 @@ paf-bundle*
 bundles/
 
 gocache/
+*.venv
+*.pyc

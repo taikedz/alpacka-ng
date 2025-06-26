@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 const NEED_ROOT int = 1
@@ -55,7 +56,13 @@ func RunCmdOut(dump bool, flags int, tokens ...string) Result {
 	}
 
 	cmd := exec.Command(t_cmd, t_args...)
-	if dump {
+	// A test-time package manager selection is set, do not run it
+	if os.Getenv("PAF_TEST_PMAN") != "" {
+		cmd_tokens := []string{t_cmd}
+		cmd_tokens = append(cmd_tokens, t_args...)
+		fmt.Printf("%v\n", strings.Join(cmd_tokens, " "))
+		return Result{0, "", nil}
+	} else if dump {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		if err := cmd.Start(); err != nil {
