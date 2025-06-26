@@ -62,9 +62,12 @@ func RunCmdOut(dump bool, flags int, tokens ...string) Result {
 		cmd_tokens = append(cmd_tokens, t_args...)
 		fmt.Printf("%v\n", strings.Join(cmd_tokens, " "))
 		return Result{0, "", nil}
-	} else if dump {
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
+	} else {
+		if dump {
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+			cmd.Stdin = os.Stdin
+		}
 		if err := cmd.Start(); err != nil {
 			return Result{-1, "", fmt.Errorf("Execution error: %v\n", err)}
 		}
@@ -78,10 +81,6 @@ func RunCmdOut(dump bool, flags int, tokens ...string) Result {
 			}
 		}
 		return Result{0, "", nil}
-	} else {
-		output, err := cmd.Output()
-		FailIf(err, 1, "Failed to gather output")
-		return Result{0, string(output), nil}
 	}
 
 }
