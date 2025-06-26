@@ -11,9 +11,7 @@ func NewZypperPM(flags []string) ZypperPM {
 func (self ZypperPM) Name() string { return "zypper" }
 
 func (self ZypperPM) Help() []string {
-	return []string{
-		"fix : fix broken dependencies",
-	}
+	return nil
 }
 
 func (self ZypperPM) Search(terms []string) {
