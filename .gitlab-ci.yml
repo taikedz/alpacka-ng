@@ -1,0 +1,20 @@
+paf-build:
+  image: golang:1.24
+  stage: build
+  script:
+  - go build -o bin/paf paf.go
+  artifacts:
+    paths:
+    - bin/paf
+
+paf-test-unit:
+  image: golang:1.24
+  stage: test
+  script:
+  - go test ./pakang
+
+paf-test-behaviour:
+  image: python:3
+  stage: test
+  script:
+  - ci/test-behaviours.sh
