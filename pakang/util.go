@@ -44,6 +44,10 @@ func ExtractValueOfKey(key string, items []string) (string, error) {
 }
 
 func IsRootUser() bool {
+	if os.Getenv("PAF_TEST_PMAN") != "" {
+		// test mode - we'll always say we're not root, to catch sudo detection
+		return false
+	}
 	u, e := user.Current()
 	FailIf(e, 98, "Fatal - Could not get current user!")
 	return u.Uid == "0" // posix only!
