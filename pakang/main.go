@@ -17,6 +17,9 @@ func Main(progname string) {
 	print_version := parser.Bool("version", false, "Show version and exit")
 	parser.SetShortFlag('V', "version")
 
+	parser.BoolVar(&VERBOSE, "verbose", false, "Set verbose mode")
+	parser.SetShortFlag('v', "verbose")
+
 	update := parser.Bool("update-index", false, "Update the package index (relevant package managers)")
 	parser.SetShortFlag('u', "update-index")
 	yes := parser.Bool("yes", false, "Automatically accept (install/upgrade)")
