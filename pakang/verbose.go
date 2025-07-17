@@ -19,6 +19,10 @@ func printVerbose(template string, items ...any) {
 	}
 }
 
+func detectVerboseFromEnv() {
+	VERBOSE = os.Getenv("PAF_VERBOSE") == "true"
+}
+
 func loadColorizationMode() {
 	val, isset := os.LookupEnv("NO_COLOR")
 	COLOR = !(isset && len(val) > 0)

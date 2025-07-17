@@ -11,7 +11,9 @@ import (
 
 func Main(progname string) {
 	loadColorizationMode()
+	detectVerboseFromEnv()
 	checkPmanRequirements()
+
 	// ==== Argument definitions
 	parser := goargs.NewParser(fmt.Sprintf("%s - Unified package manager command\n\n%s [OPTS] [PACKAGES ...]\n\nOPTS:", progname, progname))
 
