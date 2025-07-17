@@ -63,10 +63,10 @@ func LoadManifest(mfest_path string) Manifest {
 	return manifest
 }
 
-func (self Manifest) GetPackageGroups() []string {
+func (manif Manifest) GetPackageGroups() []string {
 	osr := LoadOsRelease()
 
-	for _, variant := range self.Alpacka.Variants {
+	for _, variant := range manif.Alpacka.Variants {
 		comp_strs := SplitStringMultichar(variant.Release, ", ")
 		comp_strs = ExcludeStr(comp_strs, []string{""})
 
@@ -111,14 +111,14 @@ func getComparison(compstr string) (string, string, string) {
 	return "", "", "" //for compiler
 }
 
-func (self Manifest) GetPackages() ([]string, error) {
-	pgroups := self.GetPackageGroups()
+func (manif Manifest) GetPackages() ([]string, error) {
+	pgroups := manif.GetPackageGroups()
 	if pgroups == nil {
-		return nil, fmt.Errorf("No package groups matched")
+		return nil, fmt.Errorf("no package groups matched")
 	}
 	packages := []string{}
 
-	for name, packs := range self.Alpacka.PackageGroups {
+	for name, packs := range manif.Alpacka.PackageGroups {
 		if !ArrayHas(name, pgroups) {
 			continue
 		}

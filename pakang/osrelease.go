@@ -9,57 +9,57 @@ type OsRelease struct {
 	data map[string]string
 }
 
-func (self *OsRelease) Set(key string, value string) {
-	self.data[key] = value
+func (osr *OsRelease) Set(key string, value string) {
+	osr.data[key] = value
 }
 
-func (self OsRelease) Param(name string) string {
-	return self.data[name]
+func (osr OsRelease) Param(name string) string {
+	return osr.data[name]
 }
 
-func (self OsRelease) ParamContains(param, subvalue string) bool {
-	for key, val := range self.data {
+func (osr OsRelease) ParamContains(param, subvalue string) bool {
+	for key, val := range osr.data {
 		if param != key {
 			continue
 		}
 
-		return strings.Index(val, subvalue) >= 0
+		return strings.Contains(val, subvalue)
 	}
 	return false
 }
 
-func (self OsRelease) ParamGteValueInts(param string, expect string) bool {
-	if self.data[param] == "" {
+func (osr OsRelease) ParamGteValueInts(param string, expect string) bool {
+	if osr.data[param] == "" {
 		return false
 	}
-	sys_data, reference := extractInts(self.data[param], expect)
+	sys_data, reference := extractInts(osr.data[param], expect)
 
 	return ArrIntsGte(reference, sys_data)
 }
 
-func (self OsRelease) ParamLteValueInts(param string, expect string) bool {
-	if self.data[param] == "" {
+func (osr OsRelease) ParamLteValueInts(param string, expect string) bool {
+	if osr.data[param] == "" {
 		return false
 	}
-	sys_data, reference := extractInts(self.data[param], expect)
+	sys_data, reference := extractInts(osr.data[param], expect)
 
 	return ArrIntsLte(reference, sys_data)
 }
 
-func (self OsRelease) ParamGtValueInts(param string, expect string) bool {
-	if self.data[param] == "" {
+func (osr OsRelease) ParamGtValueInts(param string, expect string) bool {
+	if osr.data[param] == "" {
 		return false
 	}
-	sys_data, reference := extractInts(self.data[param], expect)
+	sys_data, reference := extractInts(osr.data[param], expect)
 
 	return ArrIntsGt(reference, sys_data)
 }
 
-func (self OsRelease) ParamLtValueInts(param string, expect string) bool {
-	if self.data[param] == "" {
+func (osr OsRelease) ParamLtValueInts(param string, expect string) bool {
+	if osr.data[param] == "" {
 		return false
 	}
-	sys_data, reference := extractInts(self.data[param], expect)
+	sys_data, reference := extractInts(osr.data[param], expect)
 
 	return ArrIntsLt(reference, sys_data)
 }

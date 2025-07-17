@@ -12,9 +12,9 @@ func NewAptPM(flags []string) AptPM {
 	return AptPM{flags}
 }
 
-func (self AptPM) Name() string { return "APT package manager" }
+func (pm AptPM) Name() string { return "APT package manager" }
 
-func (self AptPM) Help() []string {
+func (pm AptPM) Help() []string {
 	return []string{
 		"fix : fix broken dependencies",
 		"ppa=$PPA_ID : Add a PPA",
@@ -22,44 +22,46 @@ func (self AptPM) Help() []string {
 	}
 }
 
-func (self AptPM) Search(terms []string) {
-	if len(terms) == 0 { return }
+func (pm AptPM) Search(terms []string) {
+	if len(terms) == 0 {
+		return
+	}
 	cmd := []string{"apt-cache", "search"}
 	cmd = append(cmd, terms...)
 	RunCmd(0, cmd...).OrFail("Search failed")
 }
 
-func (self AptPM) NoAction(terms []string) {
-	if ArrayHas("fix", self.extraflags) {
-		self.fixbroken()
-	} else if ArrayHas("desc", self.extraflags) {
-		for _,pkg := range terms {
+func (pm AptPM) NoAction(terms []string) {
+	if ArrayHas("fix", pm.extraflags) {
+		pm.fixbroken()
+	} else if ArrayHas("desc", pm.extraflags) {
+		for _, pkg := range terms {
 			fmt.Printf("\n--- %s ---\n", pkg)
-			self.Show(pkg)
+			pm.Show(pkg)
 		}
-	} else if val, err := ExtractValueOfKey("ppa", self.extraflags); err == nil {
-		self.addPpa(val)
+	} else if val, err := ExtractValueOfKey("ppa", pm.extraflags); err == nil {
+		pm.addPpa(val)
 	} else {
-		self.Search(terms)
+		pm.Search(terms)
 	}
 }
 
-func (self AptPM) Clean() {
+func (pm AptPM) Clean() {
 	RunCmd(NEED_ROOT, "apt-get", "autoclean").OrFail("Auto clean failed")
 	RunCmd(NEED_ROOT, "apt-get", "autoremove").OrFail("Atu remove failed")
 }
 
-func (self AptPM) fixbroken() {
+func (pm AptPM) fixbroken() {
 	RunCmd(NEED_ROOT, "apt-get", "-f", "install").OrFail("Install fix failed")
 }
 
-func (self AptPM) addPpa(ppa_id string) {
+func (pm AptPM) addPpa(ppa_id string) {
 	RunCmdOut(false, 0, "which", "add-apt-repository").OrFail("'add-apt-repository' command required, but not found on this system.")
 	RunCmd(NEED_ROOT, "add-apt-repository", ppa_id).OrFail("Could not add PPA respoitory")
 }
 
-func (self AptPM) Show(pkg string) {
-	if ArrayHas("desc", self.extraflags) {
+func (pm AptPM) Show(pkg string) {
+	if ArrayHas("desc", pm.extraflags) {
 		res := RunCmdOut(false, 0, "apt-cache", "show", pkg)
 		FailIf(res.GetError(), 1, "Could not get info for '%s'", pkg)
 
@@ -70,11 +72,11 @@ func (self AptPM) Show(pkg string) {
 	}
 }
 
-func (self AptPM) Update() {
+func (pm AptPM) Update() {
 	RunCmd(NEED_ROOT, "apt-get", "update").OrFail("Could not update package index")
 }
 
-func (self AptPM) Install(yes bool, packages []string) {
+func (pm AptPM) Install(yes bool, packages []string) {
 	cmd := []string{"apt-get", "install"}
 	if yes {
 		cmd = append(cmd, "-y")
@@ -83,13 +85,13 @@ func (self AptPM) Install(yes bool, packages []string) {
 	RunCmd(NEED_ROOT, cmd...).OrFail("Install operation failed")
 }
 
-func (self AptPM) Remove(packages []string) {
+func (pm AptPM) Remove(packages []string) {
 	cmd := []string{"apt-get", "remove"}
 	cmd = append(cmd, packages...)
 	RunCmd(NEED_ROOT, cmd...).OrFail("Package removal failed")
 }
 
-func (self AptPM) Upgrade(yes bool) {
+func (pm AptPM) Upgrade(yes bool) {
 	cmd := []string{"apt-get", "upgrade"}
 	if yes {
 		cmd = append(cmd, "-y")

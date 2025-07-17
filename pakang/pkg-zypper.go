@@ -8,36 +8,38 @@ func NewZypperPM(flags []string) ZypperPM {
 	return ZypperPM{flags}
 }
 
-func (self ZypperPM) Name() string { return "zypper" }
+func (pm ZypperPM) Name() string { return "zypper" }
 
-func (self ZypperPM) Help() []string {
-	return nil
+func (pm ZypperPM) Help() []string {
+	return []string{}
 }
 
-func (self ZypperPM) Search(terms []string) {
-	if len(terms) == 0 { return }
+func (pm ZypperPM) Search(terms []string) {
+	if len(terms) == 0 {
+		return
+	}
 	cmd := []string{"zypper", "search"}
 	cmd = append(cmd, terms...)
 	RunCmd(0, cmd...).OrFail("Search failed")
 }
 
-func (self ZypperPM) NoAction(terms []string) {
-	self.Search(terms)
+func (pm ZypperPM) NoAction(terms []string) {
+	pm.Search(terms)
 }
 
-func (self ZypperPM) Clean() {
+func (pm ZypperPM) Clean() {
 	RunCmd(NEED_ROOT, "zypper", "clean").OrFail("Clean failed")
 }
 
-func (self ZypperPM) Show(pkg string) {
+func (pm ZypperPM) Show(pkg string) {
 	RunCmd(0, "zypper", "info", pkg).OrFail("Show package failed")
 }
 
-func (self ZypperPM) Update() {
+func (pm ZypperPM) Update() {
 	RunCmd(NEED_ROOT, "zypper", "refresh").OrFail("Package index update failed")
 }
 
-func (self ZypperPM) Install(yes bool, packages []string) {
+func (pm ZypperPM) Install(yes bool, packages []string) {
 	cmd := []string{"zypper", "install"}
 	if yes {
 		cmd = append(cmd, "-y")
@@ -46,13 +48,13 @@ func (self ZypperPM) Install(yes bool, packages []string) {
 	RunCmd(NEED_ROOT, cmd...).OrFail("Install failed")
 }
 
-func (self ZypperPM) Remove(packages []string) {
+func (pm ZypperPM) Remove(packages []string) {
 	cmd := []string{"zypper", "remove"}
 	cmd = append(cmd, packages...)
 	RunCmd(NEED_ROOT, cmd...).OrFail("Remove failed")
 }
 
-func (self ZypperPM) Upgrade(yes bool) {
+func (pm ZypperPM) Upgrade(yes bool) {
 	cmd := []string{"zypper", "update"}
 	if yes {
 		cmd = append(cmd, "-y")

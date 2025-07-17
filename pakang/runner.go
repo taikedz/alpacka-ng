@@ -72,7 +72,7 @@ func RunCmdOut(dump bool, flags int, tokens ...string) Result {
 			cmd.Stdin = os.Stdin
 		}
 		if err := cmd.Start(); err != nil {
-			return Result{-1, "", fmt.Errorf("Execution error: %v\n", err)}
+			return Result{-1, "", fmt.Errorf("execution error: %v\n ", err)}
 		}
 
 		// https://stackoverflow.com/a/10385867/2703818

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 	"os/user"
+	"regexp"
 	"runtime"
 	"strconv"
 	"strings"
-	"regexp"
 )
 
 func ArrayHas(term string, stuff []string) bool {
@@ -40,7 +40,7 @@ func ExtractValueOfKey(key string, items []string) (string, error) {
 			return item[len(key_eq):], nil
 		}
 	}
-	return "", fmt.Errorf("Requred parameter '%s' not found", key)
+	return "", fmt.Errorf("required parameter '%s' not found", key)
 }
 
 func IsRootUser() bool {
@@ -61,7 +61,7 @@ func IsWinAdmin() (bool, error) {
 
 	// https://stackoverflow.com/a/19847868/2703818
 	if runtime.GOOS != "windows" {
-		return false, fmt.Errorf("Not on Windows")
+		return false, fmt.Errorf("not on Windows")
 	}
 
 	// https://stackoverflow.com/a/59147866/2703818
@@ -166,7 +166,6 @@ func ExtractInts(data string) ([]int, error) {
 
 	return nums, nil
 }
-
 
 func extractSection(section, text string) string {
 	lines := strings.Split(text, "\n")

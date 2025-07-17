@@ -2,7 +2,6 @@ package pakang
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 )
 
@@ -10,7 +9,7 @@ const warning_path string = "/etc/alpacka/warnings"
 
 func SetWarning(name string, message string) error {
 	if !IsRootUser() {
-		return fmt.Errorf("Root user is required to set warnings.")
+		return fmt.Errorf("root user is required to set warnings")
 	}
 	if !fileExists(warning_path) {
 		// https://gosamples.dev/create-directory/
@@ -35,7 +34,7 @@ func fileForWarning(name string) string {
 
 func readWarningFile(filepath string) (string, error) {
 	// https://golangdocs.com/reading-files-in-golang
-	content, err := ioutil.ReadFile(filepath)
+	content, err := os.ReadFile(filepath)
 	if err != nil {
 		return "", err
 	}

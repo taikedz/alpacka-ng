@@ -51,7 +51,7 @@ func Main(progname string) {
 
 	pman := GetPackageManager(nil)
 	pman_help := pman.Help()
-	if pman_help != nil && len(pman_help) > 0 {
+	if len(pman_help) > 0 {
 		extraflags = parser.Appender("extra", "Custom flags for system-specific package manager")
 		parser.SetShortFlag('x', "extra")
 

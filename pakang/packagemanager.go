@@ -17,11 +17,9 @@ type PackageManager interface {
 	Name() string
 }
 
-var found_pm PackageManager = nil
-
 func checkFor(cmd string) bool {
 	// set PAF_TEST_PMAN to an explicit package manager (for testing)
-	if pman, present := os.LookupEnv("PAF_TEST_PMAN"); present == true {
+	if pman, present := os.LookupEnv("PAF_TEST_PMAN"); present {
 		return pman == cmd
 	} else {
 		return RunCmdOut(false, 0, "which", cmd).Ok()
