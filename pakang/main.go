@@ -24,7 +24,7 @@ func Main(progname string) {
 	parser.SetShortFlag('v', "verbose")
 
 	specific_pm := parser.Choices("alt-pm",
-		[]string{"", "snap"},
+		[]string{"", "snap", "flatpak"},
 		"Alternative package manager",
 	)
 	parser.SetShortFlag('P', "alt-pm")

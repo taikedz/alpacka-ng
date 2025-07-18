@@ -39,6 +39,8 @@ func GetPackageManager(specific_pm string, extra []string) PackageManager {
 		switch specific_pm {
 		case "snap":
 			return NewSnapPM(extra)
+		case "flatpak":
+			return NewFlatpakPM(extra)
 		}
 	}
 
