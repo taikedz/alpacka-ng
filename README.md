@@ -79,13 +79,16 @@ paf -m -M packages.yaml
 * pacman - Arch family
 * Zypper - OpenSUSE
 
-May support in future:
+Alternative package managers are supported, by activating them explicitly. If the alternative PM is not found, Alpacka aborts activity (no fallback to native package manager).
 
-* chocolatey
-* winget
-* homebrew
+* snap
+* flatpak
+* homebrew ("brew")
 
-Notably, `chocolatey` and `homebrew` should supercede the native package manager : by default these superceders are used, except if `-N` (`native`) is used.
+```sh
+paf -P snap -i code -x classic
+paf -P brew -i code
+```
 
 ## Packages file format
 
@@ -143,6 +146,15 @@ Comparisons supported:
 * `<` - less than specified value
 * `==` - exactly equal to specified value
 * `=~` - release file contains specified value
+
+```sh
+# Using the native package manager
+paf -m -M packages-manifest.yaml
+
+# Using an alternative package manager
+# (rules are still applied, package names are fed to the alt PM)
+paf -P snap -m -M snap-packages-manifest.yaml
+```
 
 ## Get warnings
 
