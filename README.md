@@ -30,7 +30,7 @@ Download the appropriate binary (replace with `curl` as needed):
 
 ```sh
 # Use the version for you
-version=1.0.0
+version=1.1.0
 
 wget https://github.com/taikedz/alpacka-ng/releases/download/v${version}/paf
 chmod 755 paf
