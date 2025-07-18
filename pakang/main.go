@@ -23,6 +23,12 @@ func Main(progname string) {
 	parser.BoolVar(&VERBOSE, "verbose", false, "Set verbose mode")
 	parser.SetShortFlag('v', "verbose")
 
+	specific_pm := parser.Choices("alt-pm",
+		[]string{"", "snap"},
+		"Alternative package manager",
+	)
+	parser.SetShortFlag('P', "alt-pm")
+
 	update := parser.Bool("update-index", false, "Update the package index (relevant package managers)")
 	parser.SetShortFlag('u', "update-index")
 	yes := parser.Bool("yes", false, "Automatically accept (install/upgrade)")
@@ -52,7 +58,7 @@ func Main(progname string) {
 	extraflags_value := []string{}
 	extraflags := &extraflags_value
 
-	pman := GetPackageManager(nil)
+	pman := GetPackageManager(*specific_pm, nil)
 	pman_help := pman.Help()
 	if len(pman_help) > 0 {
 		extraflags = parser.Appender("extra", "Custom flags for system-specific package manager")
@@ -76,7 +82,7 @@ func Main(progname string) {
 		return
 	}
 
-	pman = GetPackageManager(*extraflags)
+	pman = GetPackageManager(*specific_pm, *extraflags)
 
 	switch *mode {
 	case "install":

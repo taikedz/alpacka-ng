@@ -48,7 +48,7 @@ func (pm AptPM) NoAction(terms []string) {
 
 func (pm AptPM) Clean() {
 	RunCmd(NEED_ROOT, "apt-get", "autoclean").OrFail("Auto clean failed")
-	RunCmd(NEED_ROOT, "apt-get", "autoremove").OrFail("Atu remove failed")
+	RunCmd(NEED_ROOT, "apt-get", "autoremove").OrFail("Auto remove failed")
 }
 
 func (pm AptPM) fixbroken() {

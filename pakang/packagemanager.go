@@ -1,6 +1,7 @@
 package pakang
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -30,7 +31,17 @@ func checkPmanRequirements() {
 	RunCmdOut(false, 0, "which", "which").OrFail("Could not run 'which'")
 }
 
-func GetPackageManager(extra []string) PackageManager {
+func GetPackageManager(specific_pm string, extra []string) PackageManager {
+	if specific_pm != "" {
+		if !checkFor(specific_pm) {
+			Fail(1, fmt.Sprintf("%s not available on this host", specific_pm), nil)
+		}
+		switch specific_pm {
+		case "snap":
+			return NewSnapPM(extra)
+		}
+	}
+
 	if checkFor("apt-get") {
 		return NewAptPM(extra)
 
