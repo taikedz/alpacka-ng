@@ -41,6 +41,8 @@ func GetPackageManager(specific_pm string, extra []string) PackageManager {
 			return NewSnapPM(extra)
 		case "flatpak":
 			return NewFlatpakPM(extra)
+		case "brew":
+			return NewBrewPM(extra)
 		}
 	}
 
