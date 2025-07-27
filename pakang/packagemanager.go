@@ -60,6 +60,10 @@ func GetPackageManager(specific_pm string, extra []string) PackageManager {
 
 	} else if checkFor("zypper") {
 		return NewZypperPM(extra)
+
+	} else if checkFor("pkg") {
+		return NewFreebsdPkgPM(extra)
+
 	}
 
 	Fail(10, "No package manager found.", nil)
