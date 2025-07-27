@@ -59,5 +59,5 @@ func (pm ZypperPM) Upgrade(yes bool) {
 	if yes {
 		cmd = append(cmd, "-y")
 	}
-	RunCmd(NEED_ROOT, cmd...).OrFail("Index update failed")
+	RunCmd(NEED_ROOT, cmd...).OrFail("Upgrade failed")
 }
