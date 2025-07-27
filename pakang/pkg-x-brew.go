@@ -1,20 +1,20 @@
 package pakang
 
-type Brew struct {
+type BrewPM struct {
 	extraflags []string
 }
 
-func NewBrewPM(flags []string) Brew {
-	return Brew{flags}
+func NewBrewPM(flags []string) BrewPM {
+	return BrewPM{flags}
 }
 
-func (pm Brew) Name() string { return "Homebrew package manager" }
+func (pm BrewPM) Name() string { return "Homebrew package manager" }
 
-func (pm Brew) Help() []string {
+func (pm BrewPM) Help() []string {
 	return []string{}
 }
 
-func (pm Brew) Search(terms []string) {
+func (pm BrewPM) Search(terms []string) {
 	if len(terms) == 0 {
 		return
 	}
@@ -23,22 +23,22 @@ func (pm Brew) Search(terms []string) {
 	RunCmd(0, cmd...).OrFail("Search failed")
 }
 
-func (pm Brew) NoAction(terms []string) {
+func (pm BrewPM) NoAction(terms []string) {
 	pm.Search(terms)
 }
 
-func (pm Brew) Clean() {
+func (pm BrewPM) Clean() {
 	RunCmd(0, "brew", "cleanup")
 }
 
-func (pm Brew) Show(pkg string) {
+func (pm BrewPM) Show(pkg string) {
 	RunCmd(0, "brew", "info", pkg).OrFail("Error")
 }
 
-func (pm Brew) Update() {
+func (pm BrewPM) Update() {
 }
 
-func (pm Brew) Install(yes bool, packages []string) {
+func (pm BrewPM) Install(yes bool, packages []string) {
 	cmd := []string{"brew", "install"}
 	if yes {
 		cmd = append(cmd, "-y")
@@ -47,13 +47,13 @@ func (pm Brew) Install(yes bool, packages []string) {
 	RunCmd(NEED_ROOT, cmd...).OrFail("Install operation failed")
 }
 
-func (pm Brew) Remove(packages []string) {
+func (pm BrewPM) Remove(packages []string) {
 	cmd := []string{"brew", "uninstall"}
 	cmd = append(cmd, packages...)
 	RunCmd(NEED_ROOT, cmd...).OrFail("Package removal failed")
 }
 
-func (pm Brew) Upgrade(yes bool) {
+func (pm BrewPM) Upgrade(yes bool) {
 	cmd := []string{"brew", "upgrade"}
 	if yes {
 		cmd = append(cmd, "-y")
