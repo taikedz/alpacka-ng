@@ -11,4 +11,8 @@ fi
 go test ./pakang/
 ci/test-behaviours.sh
 
+if git grep -n "FIXME:TODO" | grep -v ci/githooks/pre-commit ; then
+    echo "WARNING -- tags for incomplete work found"
+fi
+
 ./build.sh
