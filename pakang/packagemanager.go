@@ -31,12 +31,12 @@ func checkPmanRequirements() {
 	RunCmdOut(false, 0, "which", "which").OrFail("Could not run 'which'")
 }
 
-func GetPackageManager(specific_pm string, extra []string) PackageManager {
-	if specific_pm != "" {
-		if !checkFor(specific_pm) {
-			Fail(1, fmt.Sprintf("%s not available on this host", specific_pm), nil)
+func GetPackageManager(alt_pm string, extra []string) PackageManager {
+	if alt_pm != "" {
+		if !checkFor(alt_pm) {
+			Fail(1, fmt.Sprintf("%s not available on this host", alt_pm), nil)
 		}
-		switch specific_pm {
+		switch alt_pm {
 		case "snap":
 			return NewSnapPM(extra)
 		case "flatpak":
