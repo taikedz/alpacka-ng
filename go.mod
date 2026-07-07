@@ -1,6 +1,6 @@
 module github.com/taikedz/alpacka-ng
 
-go 1.24.2
+go 1.26.4
 
 require (
 	github.com/taikedz/goargs v0.0.26
