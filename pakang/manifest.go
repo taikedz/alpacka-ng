@@ -3,6 +3,7 @@ package pakang
 import (
 	"fmt"
 	"os"
+	"slices"
 	"strings"
 
 	"gopkg.in/yaml.v3"
@@ -119,11 +120,11 @@ func (manif Manifest) GetPackages() ([]string, error) {
 	packages := []string{}
 
 	for name, packs := range manif.Alpacka.PackageGroups {
-		if !ArrayHas(name, pgroups) {
+		if !slices.Contains(pgroups, name) {
 			continue
 		}
 		for _, p := range packs {
-			if !ArrayHas(p, packages) {
+			if !slices.Contains(packages, p) {
 				packages = append(packages, p)
 			}
 		}

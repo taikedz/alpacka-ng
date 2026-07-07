@@ -74,27 +74,20 @@ func extractInts(data, expect string) ([]int, []int) {
 	return sys_data, reference
 }
 
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
 func LoadOsRelease() OsRelease {
 	data, err := os.ReadFile("/etc/os-release")
 	FailIf(err, 1, "Could not read /etc/os-release file")
 
 	m := make(map[string]string)
 	os_release := OsRelease{m}
-	lines := strings.Split(string(data), "\n")
-	for _, line := range lines {
-		i := strings.Index(line, "=")
-		if i < 0 {
+	lines := strings.SplitSeq(string(data), "\n")
+	for line := range lines {
+		before, after, ok := strings.Cut(line, "=")
+		if !ok {
 			continue
 		}
 
-		(&os_release).Set(line[:i], strings.Trim(line[i+1:], "\""))
+		(&os_release).Set(before, strings.Trim(after, "\""))
 	}
 
 	return os_release

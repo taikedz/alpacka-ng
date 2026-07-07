@@ -1,5 +1,7 @@
 package pakang
 
+import "slices"
+
 type SnapPM struct {
 	extraflags []string
 }
@@ -44,7 +46,7 @@ func (pm SnapPM) Install(yes bool, packages []string) {
 	if yes {
 		cmd = append(cmd, "-y")
 	}
-	if ArrayHas("classic", pm.extraflags) || ArrayHas("c", pm.extraflags) {
+	if slices.Contains(pm.extraflags, "classic") || slices.Contains(pm.extraflags, "c") {
 		cmd = append(cmd, "--classic")
 	}
 	cmd = append(cmd, packages...)

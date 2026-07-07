@@ -2,6 +2,7 @@ package pakang
 
 import (
 	"fmt"
+	"slices"
 )
 
 type AptPM struct {
@@ -32,9 +33,9 @@ func (pm AptPM) Search(terms []string) {
 }
 
 func (pm AptPM) NoAction(terms []string) {
-	if ArrayHas("fix", pm.extraflags) {
+	if slices.Contains(pm.extraflags, "fix") {
 		pm.fixbroken()
-	} else if ArrayHas("desc", pm.extraflags) {
+	} else if slices.Contains(pm.extraflags, "desc") {
 		for _, pkg := range terms {
 			fmt.Printf("\n--- %s ---\n", pkg)
 			pm.Show(pkg)
@@ -61,7 +62,7 @@ func (pm AptPM) addPpa(ppa_id string) {
 }
 
 func (pm AptPM) Show(pkg string) {
-	if ArrayHas("desc", pm.extraflags) {
+	if slices.Contains(pm.extraflags, "desc") {
 		res := RunCmdOut(false, 0, "apt-cache", "show", pkg)
 		FailIf(res.GetError(), 1, "Could not get info for '%s'", pkg)
 

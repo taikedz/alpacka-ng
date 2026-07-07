@@ -6,24 +6,16 @@ import (
 	"os/user"
 	"regexp"
 	"runtime"
+	"slices"
 	"strconv"
 	"strings"
 )
-
-func ArrayHas(term string, stuff []string) bool {
-	for _, thing := range stuff {
-		if term == thing {
-			return true
-		}
-	}
-	return false
-}
 
 func ExcludeStr(input []string, exclude []string) []string {
 	var retained []string
 
 	for _, s := range input {
-		if !ArrayHas(s, exclude) {
+		if !slices.Contains(exclude, s) {
 			retained = append(retained, s)
 		}
 	}
@@ -93,7 +85,7 @@ func SplitStringsChar(data []string, char string) []string {
 func ArrIntsGt_b(reference, held_data []int, equalok bool) bool {
 
 	z := max(len(reference), len(held_data))
-	for i := 0; i < z; i++ {
+	for i := range z {
 		held_data_v := 0
 		if i < len(held_data) {
 			held_data_v = held_data[i]
@@ -125,7 +117,7 @@ func ArrIntsGt(reference, held_data []int) bool {
 func ArrIntsLt_b(reference, held_data []int, equalok bool) bool {
 
 	z := max(len(reference), len(held_data))
-	for i := 0; i < z; i++ {
+	for i := range z {
 		held_data_v := 0
 		if i < len(held_data) {
 			held_data_v = held_data[i]
