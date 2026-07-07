@@ -24,18 +24,11 @@ Alpacka provides:
 
 ## Download + Install
 
-See <https://github.com/taikedz/alpacka-ng/releases> for latest version
+See <https://github.com/taikedz/alpacka-ng/releases> for a list of versions.
 
-Download the appropriate binary (replace with `curl` as needed):
+Run `./install.sh` for latest version.
 
-```sh
-# Use the version for you
-version=1.1.0
-
-wget https://github.com/taikedz/alpacka-ng/releases/download/v${version}/paf
-chmod 755 paf
-sudo cp ./paf /usr/local/bin/paf
-```
+Run `./install.sh <VERSION>` for a specific version.
 
 ## Build
 
